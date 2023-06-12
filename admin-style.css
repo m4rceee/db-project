@@ -62,6 +62,7 @@ body {
   }
 
 #regiscard {
+    background-color: #004500;
     margin-left: 15px;
     max-height: 500px;
     overflow: auto;

@@ -4,12 +4,14 @@ $both_err = $notfound_err = $username_err = $password_err="";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        if(empty($_POST['username'])) {
+        if(empty($_POST['username']) && !empty($_POST['pswd'])) {
             $username_err = "<div class='alert alert-danger mt-2'><strong>Please enter a username.<strong></div>";
-        } if(empty($_POST['pswd'])) {
+        } 
+        if(empty($_POST['pswd']) && !empty($_POST['username'])) {
             $password_err = "<div class='alert alert-danger mt-2'><strong>Please enter a password.</strong></div>";
-        } else if(empty($_POST['username']) && empty($_POST['pswd'])) {
-            $both_err = "<div class='alert alert-danger mt-2'><strong>Please enter the fields.</strong></div>";
+        }
+        if(empty($_POST['username']) && empty($_POST['pswd'])) {
+            $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
         }
 
         $username = $_POST['username'];
@@ -22,31 +24,20 @@ $both_err = $notfound_err = $username_err = $password_err="";
             $error_message = $mysqli->connect_error;
             echo "The connection to the database failed with error code $error_code and error message $error_message";
         } else {
-
-            $sql = "SELECT * 
-            FROM admin_user WHERE admin_name = ? AND password = ?";
-
+            $sql = "SELECT * FROM admin_user WHERE admin_name = ? AND password = ?";
             $stmt = $mysqli->prepare($sql);
-
             $stmt->bind_param("ss", $username, $pswd);
-
             $stmt->execute();
-
             $result = $stmt->get_result();
-
             if ($result->num_rows > 0) {
-
                 header("Location: admin-teacher.php");
                 exit();
-
             } else {
                 $notfound_err = "<div class='alert alert-danger mt-2'><strong>Cannot find the user.</strong></div>";
             }
-
-        }
-
-        
-    }
+        } 
+    } 
+    
 
 
 
@@ -88,18 +79,18 @@ $both_err = $notfound_err = $username_err = $password_err="";
                     <div class="card-title text-center mt-3 mb-2">
                         <h5 class="adminlogin">Admin Log In</h5>
                         <?php echo $notfound_err; ?>
-                        <?php echo $both_err; ?>
                     </div>
                     <div class="mb-3 mt-3">
                       <label for="username" class="form-label"><strong>Username:</strong></label>
                       <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" autocomplete="off">
                         <?php echo $username_err; ?>
+                        <?php echo $both_err; ?>
                     </div>
                     <div class="mb-4">
                       <label for="pwd" class="form-label"><strong>Password:</strong></label>
-                    
                         <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off">
-                        <span><?php echo $password_err; ?></span>
+                        <?php echo $password_err; ?>
+                        <?php echo $both_err; ?>
                         <!--<span class="input-group-text">
                             <button class="btn" id="eye">
                                 <img src="eye-slash.svg">

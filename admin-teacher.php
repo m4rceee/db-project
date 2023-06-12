@@ -19,8 +19,8 @@
       <div class="header">
           <div class="container-fluid p-3">
               <div class="d-flex align-items-center mb-3">
-                  <img src="logo.svg" alt="Logo" width="80">
-                  <h1 class="title text-uppercase">student attendance management system</h1>
+                  <img src="logo.svg" alt="Logo" width="85">
+                  <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
                   <a id="logout" href="logout.php">Logout</a>
                 </div>
               
@@ -78,7 +78,6 @@
                               <label for="email" class="form-label">E-mail:</label>
                               <input type="email" class="form-control" id="email" placeholder="Enter e-mail" name="email" autocomplete="off" required>
                             </div>
-
                             <div class="d-flex justify-content-center gap-2 mt-4 mb-2">
                               <button type="submit" id="teachersbmt" class="btn">Log In</button>
                               <a class="btn text-white" href="#" role="button" id="cancel">Cancel</a>
