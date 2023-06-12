@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="admin-course&subj.css">
+
+    <!-- fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+    </style>
+    
+    <title>Admin-Courses and Subject</title>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container-fluid mt-3 p-3">
+            <div class="d-flex align-items-center mb-3">
+                <img src="logo.svg" alt="Logo" width="80">
+                <h1 class="title text-uppercase">student attendance management system</h1>
+                <a id="logout" href="home.html">Logout</a>
+              </div>
+            
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="admin-teacher.html" id="nav-item1">Teacher</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admin-student.html" id="nav-item2">Student</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admin-course&subj.html" id="nav-item3">Course & Subject</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admin-attendance.html" id="nav-item4">Attendance</a>
+            </li>
+            </ul>
+    </div>
+
+    <div class="row">
+        <!--REGISTER-->
+        <div class="col-sm-4">
+            <div class="card mt-3" id="regiscard">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h1>SELECT COURSE:</h1>
+                    </div>
+                    <form action="admin-student.php" method="POST">
+                        <div class="dropdown d-grid dropdown-menu-end">
+                            <button type="button" class="btn dropdown-toggle text-white" data-bs-toggle="dropdown" id="dropdown">
+                              Courses
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">Bachelor of Elementary Education</a></li>
+                              <li><a class="dropdown-item" href="#">Bachelor of Secondary Education</a></li>
+                              <li><a class="dropdown-item" href="#">BS Business Management</a></li>
+                              <li><a class="dropdown-item" href="#">BS Computer Science</a></li>
+                              <li><a class="dropdown-item" href="#">BS Hospitality Management</a></li>
+                              <li><a class="dropdown-item" href="#">BS Information Technology</a></li>
+                              <li><a class="dropdown-item" href="#">BS Psychology</a></li>
+                              <li><a class="dropdown-item" href="#">BS Tourism Management</a></li>
+                            </ul>
+                          </div>
+
+                          <div class="mb-3">
+                            <label for="subject" class="form-label mt-3"><h1>ADD SUBJECT:</h1></label>
+                            <input type="text" class="form-control" id="subject" placeholder="Enter subject name" name="subject" autocomplete="off" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="code" class="form-label" style="color: #004500;">Subject Code:</label>
+                            <input type="text" class="form-control" id="code" placeholder="Enter subject code" name="code" autocomplete="off" required>
+                          </div>
+
+                          <div class="d-flex justify-content-center gap-2 mt-4 mb-2">
+                            <button type="submit" id="studentsbmt" class="btn">Log In</button>
+                            <a class="btn text-white" href="#" role="button" id="cancel">Cancel</a>
+                          </div>
+                          
+                    </form>
+        
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-8">
+            <div class="card mt-3" id="course-subjcard">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h1>SUBJECTS:</h1>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Course</th>
+                            <th>Subject Name</th>
+                            <th>Subject Code</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>BS Computer Science</td>
+                            <td>Object-Oriented Programming</td>
+                            <td>DCIT 25</td>
+                            <td>
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>BS Computer Science</td>
+                            <td>Advanced Calculus</td>
+                            <td>MATH 2</td>
+                            <td>
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        
+    
+
+
+
+
+    <!-- script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+</html>
