@@ -1,3 +1,8 @@
+<?php
+    echo "Success!";
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
