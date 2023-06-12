@@ -57,7 +57,7 @@ $both_err = $notfound_err = $username_err = $password_err="";
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
     </style>
     
-    <title>Admin Log In Page</title>
+    <title>Teacher Log In Page</title>
 </head>
 
 <body>
