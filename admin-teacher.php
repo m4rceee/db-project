@@ -93,9 +93,9 @@
               <div class="card mt-3" id="teachercard">
                   <div class="card-body">
                       <div class="card-title">
-                          <h1>TEACHERS:</h1>
+                          <h1 style="color: #004500;">TEACHERS:</h1>
                       </div>
-                      <table class="table table-striped">
+                      <table class="table table-striped" id="table-bg">
                           <thead>
                             <tr>
                               <th>EMP</th>
