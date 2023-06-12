@@ -1,5 +1,57 @@
+<?php
+
+$both_err = $notfound_err = $username_err = $password_err="";
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        if(empty($_POST['username'])) {
+            $username_err = "<div class='alert alert-danger mt-2'><strong>Please enter a username.<strong></div>";
+        } if(empty($_POST['pswd'])) {
+            $password_err = "<div class='alert alert-danger mt-2'><strong>Please enter a password.</strong></div>";
+        } else if(empty($_POST['username']) && empty($_POST['pswd'])) {
+            $both_err = "<div class='alert alert-danger mt-2'><strong>Please enter the fields.</strong></div>";
+        }
+
+        $username = $_POST['username'];
+        $pswd = $_POST['pswd'];
+
+        $mysqli = new mysqli("localhost", "root", "", "admin_db");
+
+        if ($mysqli->connect_errno) {
+            $error_code = $mysqli->connect_errno;
+            $error_message = $mysqli->connect_error;
+            echo "The connection to the database failed with error code $error_code and error message $error_message";
+        } else {
+
+            $sql = "SELECT * 
+            FROM admin_user WHERE admin_name = ? AND password = ?";
+
+            $stmt = $mysqli->prepare($sql);
+
+            $stmt->bind_param("ss", $username, $pswd);
+
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+
+                header("Location: admin-teacher.php");
+                exit();
+
+            } else {
+                $notfound_err = "<div class='alert alert-danger mt-2'><strong>Cannot find the user.</strong></div>";
+            }
+
+        }
+
+        
+    }
 
 
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,24 +84,28 @@
     <div class="cn-1 container">
         <div class="card mx-auto">
             <div class="card-body">
-                <div class="card-title text-center mt-3">
-                    <h5 class="adminlogin">Admin Log In</h5>
-                </div>
-                <form action="admin-login.php" method="post">
+                <form action="admin-login.php" method="POST">
+                    <div class="card-title text-center mt-3 mb-2">
+                        <h5 class="adminlogin">Admin Log In</h5>
+                        <?php echo $notfound_err; ?>
+                        <?php echo $both_err; ?>
+                    </div>
                     <div class="mb-3 mt-3">
                       <label for="username" class="form-label"><strong>Username:</strong></label>
-                      <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" autocomplete="off" required>
+                      <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" autocomplete="off">
+                        <?php echo $username_err; ?>
                     </div>
                     <div class="mb-4">
                       <label for="pwd" class="form-label"><strong>Password:</strong></label>
-                      <div class="input-group">
-                        <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off" required>
+                    
+                        <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off">
+                        <span><?php echo $password_err; ?></span>
                         <!--<span class="input-group-text">
                             <button class="btn" id="eye">
                                 <img src="eye-slash.svg">
                             </button>
                         </span>-->
-                      </div>
+                      
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" id="admnsbmt" class="btn btn-primary">Log In</button>
