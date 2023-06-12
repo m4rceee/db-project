@@ -88,15 +88,17 @@ $both_err = $notfound_err = $username_err = $password_err="";
                     </div>
                     <div class="mb-4">
                       <label for="pwd" class="form-label"><strong>Password:</strong></label>
-                        <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off">
-                        <?php echo $password_err; ?>
+                      <div class="input-group">
+                            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off">
+                            <div class="input-group-text">
+                                <button class="btn" type="button" id="eye">
+                                    <img src="eye-slash.svg">
+                                </button>
+                            </div>
+                            
+                      </div>
+                      <?php echo $password_err; ?>
                         <?php echo $both_err; ?>
-                        <!--<span class="input-group-text">
-                            <button class="btn" id="eye">
-                                <img src="eye-slash.svg">
-                            </button>
-                        </span>-->
-                      
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" id="admnsbmt" class="btn btn-primary">Log In</button>
