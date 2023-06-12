@@ -1,6 +1,4 @@
-<?php
-    echo "Success!";
-?>
+
 
 
 <!DOCTYPE html>
@@ -46,11 +44,11 @@
                       <label for="pwd" class="form-label"><strong>Password:</strong></label>
                       <div class="input-group">
                         <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off" required>
-                        <span class="input-group-text">
+                        <!--<span class="input-group-text">
                             <button class="btn" id="eye">
                                 <img src="eye-slash.svg">
                             </button>
-                        </span>
+                        </span>-->
                       </div>
                     </div>
                     <div class="d-flex justify-content-center">
@@ -60,7 +58,7 @@
             </div>
         </div>
     </div>
-    <a class="homebtn btn btn-floating text-white" href="home.html" role="button" id="homebtn">Back</a>
+    <a class="homebtn btn btn-floating text-white" href="home.php" role="button" id="homebtn">Back</a>
 
     <!-- script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
