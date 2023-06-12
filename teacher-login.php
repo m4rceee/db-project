@@ -17,14 +17,14 @@ $both_err = $notfound_err = $username_err = $password_err="";
         $username = $_POST['username'];
         $pswd = $_POST['pswd'];
 
-        $mysqli = new mysqli("localhost", "root", "", "admin_db");
+        $mysqli = new mysqli("localhost", "root", "", "teacher_db");
 
         if ($mysqli->connect_errno) {
             $error_code = $mysqli->connect_errno;
             $error_message = $mysqli->connect_error;
             echo "The connection to the database failed with error code $error_code and error message $error_message";
         } else {
-            $sql = "SELECT * FROM admin_user WHERE admin_name = ? AND password = ?";
+            $sql = "SELECT * FROM teacher_user WHERE teacher_email = ? AND password = ?";
             $stmt = $mysqli->prepare($sql);
             $stmt->bind_param("ss", $username, $pswd);
             $stmt->execute();
@@ -75,11 +75,11 @@ $both_err = $notfound_err = $username_err = $password_err="";
             <div class="card-body">
                 <form action="admin-login.php" method="POST">
                     <div class="card-title text-center mt-3 mb-2">
-                        <h5 class="adminlogin">Admin Log In</h5>
+                        <h5 class="adminlogin">Teacher Log In</h5>
                         <?php echo $notfound_err; ?>
                     </div>
                     <div class="mb-3 mt-3">
-                      <label for="username" class="form-label"><strong>Username:</strong></label>
+                      <label for="username" class="form-label"><strong>Email:</strong></label>
                       <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" autocomplete="off">
                         <?php echo $username_err; ?>
                         <?php echo $both_err; ?>
