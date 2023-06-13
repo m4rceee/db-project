@@ -1,6 +1,17 @@
 <?php
+session_start();
 
 $status = $emptyField = "";
+
+if (isset($_SESSION['status'])) {
+    $status = "<div class='alert alert-success alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
+    unset($_SESSION['status']);
+} 
+
+if (isset($_SESSION['status'])) {
+  $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
+  unset($_SESSION['status']);
+} 
 
   $con = mysqli_connect("localhost", "root", "", "teachers_db");
 
@@ -17,11 +28,21 @@ $status = $emptyField = "";
       if (empty($_POST[$field])) {
           $allFieldsNotEmpty = false;
           $emptyField = "<div class='alert alert-danger mt-2'><strong>Missing field/s.</strong></div>";
-          break; // Stop the loop as soon as an empty field is found
+          break;
       }
     }
 
     if ($allFieldsNotEmpty) {
+
+      function generateRandomPassword($length = 8) {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()';
+        $password = '';
+    
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $password;
+      }
 
         $fullname = mysqli_real_escape_string($con, $_POST['fullname']);
         $gender = mysqli_real_escape_string($con, $_POST['gender']);
@@ -30,31 +51,27 @@ $status = $emptyField = "";
         $department = mysqli_real_escape_string($con, $_POST['department']);
         $contact = mysqli_real_escape_string($con, $_POST['contact']);
         $email = mysqli_real_escape_string($con, $_POST['email']);
+        $password = generateRandomPassword(8);
 
-        $query = "INSERT INTO teachers (full_name, gender, birthdate, city, department, contact, email) 
-                  VALUES ('$fullname', '$gender', '$birthdate', '$city', '$department', '$contact', '$email')";
+        $query = "INSERT INTO teachers (full_name, gender, birthdate, city, department, contact, email, password) 
+                  VALUES ('$fullname', '$gender', '$birthdate', '$city', '$department', '$contact', '$email', '$password')";
         
         $query_run = mysqli_query($con, $query);
 
         if($query_run) {
+          session_start();
+          $_SESSION['status'] = "Teacher created successfully.";
           header("Location: admin-teacher.php");
-          $status = "<div class='alert alert-success alert-dismissible fade show mt-2'><strong>Teacher created successfully.</strong></div>";
           exit();
         } else {
-          $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>Teacher creation unsuccessful. Please try again.</strong></div>";
+          session_start();
+          $_SESSION['status'] = "Teacher creation unsuccessful.";
+          header("Location: admin-teacher.php");
+          exit();
         }
     }
   }
 ?>
-
-<?php
-  $con = mysqli_connect("localhost", "root", "", "teachers_db");
-
-  if(!$con) {
-    die("Connection Failed: ". mysqli_connect_error());
-  }
-?>
-
 
 <!DOCTYPE html>
   <html lang="en">
@@ -174,11 +191,11 @@ $status = $emptyField = "";
                                 foreach($query_run as $teacher) {
                                   ?>
                                     <tr>
-                                      <td><?= $teacher['EMP'] ?></td>
-                                      <td><?= $teacher['full_name'] ?></td>
-                                      <td><?= $teacher['department'] ?></td>
+                                      <td><?= $teacher['EMP']; ?></td>
+                                      <td><?= $teacher['full_name']; ?></td>
+                                      <td><?= $teacher['department']; ?></td>
                                       <td>
-                                        <a href="#" class="btn btn-primary btn-sm">Edit</a>
+                                        <a href="teacher-edit.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-primary btn-sm">Edit</a>
                                         <a href="#" class="btn btn-danger btn-sm">Delete</a>
                                       </td> 
                                     </tr>

@@ -36,7 +36,7 @@
             </div>
             <div class="d-grid gap-3">
                 <a class="btn btn-block" href="admin-login.php" role="button" id="adminbtn">Admin</a>
-                <a class="btn btn-block" href="#" role="button" id="teacherbtn">Teacher</a>
+                <a class="btn btn-block" href="teacher-login.php" role="button" id="teacherbtn">Teacher</a>
                 <a class="btn btn-block mb-4" href="#" role="button" id="studentbtn">Student</a>
             </div>
         </div>
