@@ -25,6 +25,7 @@ if (isset($_SESSION['status1'])) {
     $fieldsToValidate = array('fullname', 'gender', 'birthdate', 'city', 'department', 'contact', 'email');
     $allFieldsNotEmpty = true;
 
+    // VALIDATION FOR EMPTY FIELDS
     foreach ($fieldsToValidate as $field) {
       if (empty($_POST[$field])) {
           $allFieldsNotEmpty = false;
@@ -35,6 +36,7 @@ if (isset($_SESSION['status1'])) {
 
     if ($allFieldsNotEmpty) {
 
+      // RANDOM PASSWORD GENERATION
       function generateRandomPassword($length = 8) {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()';
         $password = '';
@@ -54,6 +56,7 @@ if (isset($_SESSION['status1'])) {
         $email = mysqli_real_escape_string($con, $_POST['email']);
         $password = generateRandomPassword(8);
 
+        // VALIDATION FOR EXISTING TEACHER
         $query = "SELECT email FROM teachers WHERE email = ?";
           $stmt = mysqli_prepare($con, $query);
           mysqli_stmt_bind_param($stmt, "s", $email);
@@ -66,6 +69,8 @@ if (isset($_SESSION['status1'])) {
             header("Location: admin-teacher.php");
             exit();
           } else {
+
+            // REGISTER THE TEACHER IF THERE ISN'T EXISTING ONE ON THE DATABASE
             $query = "INSERT INTO teachers (full_name, gender, birthdate, city, department, contact, email, password) 
                   VALUES ('$fullname', '$gender', '$birthdate', '$city', '$department', '$contact', '$email', '$password')";
             
@@ -78,8 +83,7 @@ if (isset($_SESSION['status1'])) {
   
               $email = $_POST['email'];
               $password = $_POST['password'];
-  
-              // Redirect back to the page with success flag and data in the URL
+
               $redirectURL = 'admin-teacher.php?success=true&email=' . urlencode($email) . '&password=' . urlencode($password);
               header('Location: ' . $redirectURL);
               exit();
@@ -260,21 +264,5 @@ if (isset($_SESSION['status1'])) {
 
       <!-- script -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-      <script>
-        // When the document is ready
-        $(document).ready(function() {
-          // If the registration was successful, show the modal
-          <?php if (isset($_GET['success']) && $_GET['success'] == 'true') { ?>
-            $('#registrationModal').modal('show');
-            var email = "<?php echo $_GET['email']; ?>";
-            var password = "<?php echo $_GET['password']; ?>";
-            $('#modalEmail').text(email);
-            $('#modalPassword').text(password);
-          <?php } ?>
-        });
-      </script>
-
-
     </body>
 </html>

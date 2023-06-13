@@ -108,3 +108,8 @@ h1 {
 #table-bg {
   background-color: #018100;
 }
+
+.note {
+    color:#004500;
+    size: 15px;
+}
