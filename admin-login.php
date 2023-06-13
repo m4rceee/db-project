@@ -4,44 +4,39 @@ $both_err = $notfound_err = $username_err = $password_err="";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        if(empty($_POST['username']) && !empty($_POST['pswd'])) {
+        if(!empty($_POST['username']) && !empty($_POST['pswd'])) {
+            $username = $_POST['username'];
+            $pswd = $_POST['pswd'];
+
+            $mysqli = new mysqli("localhost", "root", "", "admin_db");
+
+            if ($mysqli->connect_errno) {
+                $error_code = $mysqli->connect_errno;
+                $error_message = $mysqli->connect_error;
+                echo "The connection to the database failed with error code $error_code and error message $error_message";
+            } else {
+                $sql = "SELECT * FROM admin_user WHERE admin_name = ? AND password = ?";
+                $stmt = $mysqli->prepare($sql);
+                $stmt->bind_param("ss", $username, $pswd);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    header("Location: admin-teacher.php");
+                    exit();
+                } else {
+                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect username or password.</strong></div>";
+                }
+            }
+        } else if(empty($_POST['username']) && !empty($_POST['pswd'])) {
             $username_err = "<div class='alert alert-danger mt-2'><strong>Please enter a username.<strong></div>";
         } 
-        if(empty($_POST['pswd']) && !empty($_POST['username'])) {
+        else if(empty($_POST['pswd']) && !empty($_POST['username'])) {
             $password_err = "<div class='alert alert-danger mt-2'><strong>Please enter a password.</strong></div>";
         }
-        if(empty($_POST['username']) && empty($_POST['pswd'])) {
+        else if(empty($_POST['username']) && empty($_POST['pswd'])) {
             $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
-        }
-
-        $username = $_POST['username'];
-        $pswd = $_POST['pswd'];
-
-        $mysqli = new mysqli("localhost", "root", "", "admin_db");
-
-        if ($mysqli->connect_errno) {
-            $error_code = $mysqli->connect_errno;
-            $error_message = $mysqli->connect_error;
-            echo "The connection to the database failed with error code $error_code and error message $error_message";
-        } else {
-            $sql = "SELECT * FROM admin_user WHERE admin_name = ? AND password = ?";
-            $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param("ss", $username, $pswd);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                header("Location: admin-teacher.php");
-                exit();
-            } else {
-                $notfound_err = "<div class='alert alert-danger mt-2'><strong>Cannot find the user.</strong></div>";
-            }
         } 
     } 
-    
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -95,7 +90,6 @@ $both_err = $notfound_err = $username_err = $password_err="";
                                     <img src="eye-slash.svg">
                                 </button>
                             </div>
-                            
                       </div>
                       <?php echo $password_err; ?>
                         <?php echo $both_err; ?>
