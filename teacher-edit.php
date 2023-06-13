@@ -30,9 +30,9 @@ $notfound_err = $status = "";
         $email = mysqli_real_escape_string($con, $_POST['email']);
         $password = mysqli_real_escape_string($con, $_POST['password']);
 
-            $sql = "SELECT password FROM teachers WHERE full_name = ? AND password = ?";
+            $sql = "SELECT password FROM teachers WHERE EMP = ? AND password = ?";
                 $stmt = $con->prepare($sql);
-                $stmt->bind_param("ss", $fullname, $password);
+                $stmt->bind_param("ss", $teacher_id, $password);
                 $stmt->execute();
                 $result = $stmt->get_result();
 

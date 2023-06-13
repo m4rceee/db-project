@@ -1,16 +1,16 @@
 <?php
 session_start();
 
-$status = $emptyField = "";
+$status1 = $status = $emptyField = "";
 
 if (isset($_SESSION['status'])) {
     $status = "<div class='alert alert-success alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
     unset($_SESSION['status']);
 } 
 
-if (isset($_SESSION['status'])) {
-  $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
-  unset($_SESSION['status']);
+if (isset($_SESSION['status1'])) {
+  $status1 = "<div class='alert alert-danger alert-dismissible fade show mt-2'><strong>{$_SESSION['status1']}</strong></div>";
+  unset($_SESSION['status1']);
 } 
 
   $con = mysqli_connect("localhost", "root", "", "teachers_db");
@@ -19,6 +19,7 @@ if (isset($_SESSION['status'])) {
     die("Connection Failed: ". mysqli_connect_error());
   }
 
+  // REGISTRATION PROCESS
   if(isset($_POST['save_teacher'])) {
 
     $fieldsToValidate = array('fullname', 'gender', 'birthdate', 'city', 'department', 'contact', 'email');
@@ -53,24 +54,44 @@ if (isset($_SESSION['status'])) {
         $email = mysqli_real_escape_string($con, $_POST['email']);
         $password = generateRandomPassword(8);
 
-        $query = "INSERT INTO teachers (full_name, gender, birthdate, city, department, contact, email, password) 
-                  VALUES ('$fullname', '$gender', '$birthdate', '$city', '$department', '$contact', '$email', '$password')";
-        
-        $query_run = mysqli_query($con, $query);
+        $query = "SELECT email FROM teachers WHERE email = ?";
+          $stmt = mysqli_prepare($con, $query);
+          mysqli_stmt_bind_param($stmt, "s", $email);
+          mysqli_stmt_execute($stmt);
+          mysqli_stmt_store_result($stmt);
 
-        if($query_run) {
-          session_start();
-          $_SESSION['status'] = "Teacher created successfully.";
-          header("Location: admin-teacher.php");
-          exit();
-        } else {
-          session_start();
-          $_SESSION['status'] = "Teacher creation unsuccessful.";
-          header("Location: admin-teacher.php");
-          exit();
-        }
-    }
-  }
+          if (mysqli_stmt_num_rows($stmt) > 0) {
+            session_start();
+            $_SESSION['status1'] = "Teacher already exists.";
+            header("Location: admin-teacher.php");
+            exit();
+          } else {
+            $query = "INSERT INTO teachers (full_name, gender, birthdate, city, department, contact, email, password) 
+                  VALUES ('$fullname', '$gender', '$birthdate', '$city', '$department', '$contact', '$email', '$password')";
+            
+            $query_run = mysqli_query($con, $query);
+
+            if($query_run) {
+          
+              session_start();
+              $_SESSION['status'] = "Teacher created successfully.";
+  
+              $email = $_POST['email'];
+              $password = $_POST['password'];
+  
+              // Redirect back to the page with success flag and data in the URL
+              $redirectURL = 'admin-teacher.php?success=true&email=' . urlencode($email) . '&password=' . urlencode($password);
+              header('Location: ' . $redirectURL);
+              exit();
+            } else {
+              session_start();
+              $_SESSION['status1'] = "Teacher creation unsuccessful.";
+              header("Location: admin-teacher.php");
+              exit();
+            }
+          }
+      }
+  }  
 ?>
 
 <!DOCTYPE html>
@@ -123,6 +144,7 @@ if (isset($_SESSION['status'])) {
                   <div class="card-body">
                       <div class="card-title">
                           <h1>REGISTER:</h1>
+                          <?php echo $status1; ?>
                           <?php echo $status; ?>
                           <?php echo $emptyField; ?>
                       </div>
@@ -215,13 +237,44 @@ if (isset($_SESSION['status'])) {
           </div>
       </div>
 
-          
-      
-
-
-
+      <!-- Modal -->
+    <div class="modal fade" id="registrationModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registrationModalLabel">Registration Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  <p>Email: <span id="modalEmail"></span></p>
+                  <p>Password: <span id="modalPassword"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
       <!-- script -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-  </body>
-  </html>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+      <script>
+        // When the document is ready
+        $(document).ready(function() {
+          // If the registration was successful, show the modal
+          <?php if (isset($_GET['success']) && $_GET['success'] == 'true') { ?>
+            $('#registrationModal').modal('show');
+            var email = "<?php echo $_GET['email']; ?>";
+            var password = "<?php echo $_GET['password']; ?>";
+            $('#modalEmail').text(email);
+            $('#modalPassword').text(password);
+          <?php } ?>
+        });
+      </script>
+
+
+    </body>
+</html>
