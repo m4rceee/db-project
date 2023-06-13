@@ -156,8 +156,8 @@ if (isset($_SESSION['status'])) {
                               <input type="email" class="form-control" id="email" placeholder="Enter e-mail" name="email" autocomplete="off">
                             </div>
                             <div class="d-flex justify-content-center gap-2 mt-4 mb-2">
-                              <button type="submit" name="save_teacher" id="teachersbmt" class="btn">Log In</button>
-                              <a class="btn text-white" href="#" role="button" id="cancel">Cancel</a>
+                              <button type="submit" name="save_teacher" id="teachersbmt" class="btn">Register</button>
+                              <a class="btn text-white" href="admin-teacher.php" role="button" id="cancel">Cancel</a>
                             </div>
                             
                       </form>
@@ -195,8 +195,11 @@ if (isset($_SESSION['status'])) {
                                       <td><?= $teacher['full_name']; ?></td>
                                       <td><?= $teacher['department']; ?></td>
                                       <td>
-                                        <a href="teacher-edit.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-primary btn-sm">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                        <a href="teacher-view.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-primary btn-sm">View</a>
+                                        <a href="teacher-edit.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-success btn-sm">Edit</a>
+                                        <form action="teacher-delete.php" method="POST" class="d-inline">
+                                            <button type="submit" name="delete_teacher" value="<?= $teacher['EMP']; ?>" class="btn btn-danger btn-sm">Delete</button>
+                                        </form> 
                                       </td> 
                                     </tr>
                                   <?php

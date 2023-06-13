@@ -1,17 +1,4 @@
 <?php
-session_start();
-
-if (isset($_SESSION['status'])) {
-    $status = "<div class='alert alert-success alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
-    unset($_SESSION['status']);
-} 
-if (isset($_SESSION['status'])) {
-  $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
-  unset($_SESSION['status']);
-} 
-
-$notfound_err = $status = "";
-
     $con = mysqli_connect("localhost", "root", "", "teachers_db");
 
     if(!$con) {
@@ -90,8 +77,7 @@ $notfound_err = $status = "";
               <div class="card mt-5 mx-auto" id="regiscard">
                   <div class="card-body">
                     <div class="card-title">
-                            <h1>EDIT TEACHER:</h1>
-                            <?php echo $notfound_err; ?>
+                            <h1>TEACHER DETAILS:</h1>
                     </div>
                     <?php
                         if(isset($_GET['EMP'])) {
@@ -102,45 +88,45 @@ $notfound_err = $status = "";
                             if(mysqli_num_rows($query_run) > 0) {
                                 $teacher = mysqli_fetch_array($query_run);
                                 ?>
-                                    <form action="teacher-edit.php" method="POST">
+                                    <form action="teacher-view.php" method="POST">
                                         <input type="hidden" name="teacher_id" value="<?= $teacher_id?>">
 
                                             <div class="mb-3 mt-3">
                                             <label for="fullname" class="form-label">Full Name:</label>
-                                            <input type="text" class="form-control" id="fullname" placeholder="Enter full name" value="<?=$teacher['full_name'];?>" name="fullname" autocomplete="off"> 
+                                            <p class="form-control"><?=$teacher['full_name'];?></p>        
                                             </div>
 
                                             <div class="mb-3">
                                             <label for="gender" class="form-label">Gender:</label>
-                                            <input type="text" class="form-control" id="gender" placeholder="Enter gender" value="<?=$teacher['gender'];?>" name="gender" autocomplete="off">
+                                            <p class="form-control"><?=$teacher['gender'];?></p>
                                             </div>
 
                                             <div class="mb-3">
                                             <label for="birthdate" class="form-label">Date of Birth:</label>
-                                            <input type="date" class="form-control" id="birthdate" placeholder="Enter birth date" value="<?=$teacher['birthdate'];?>" name="birthdate" autocomplete="off">
-                                            </div>
+                                            <p class="form-control"><?=$teacher['birthdate'];?></p> 
+                                             </div>
 
                                             <div class="mb-3">
                                             <label for="city" class="form-label">City:</label>
-                                            <input type="text" class="form-control" id="city" placeholder="Enter city" value="<?=$teacher['city'];?>" name="city" autocomplete="off">
+                                            <p class="form-control"><?=$teacher['city'];?></p>
                                             </div>
 
                                             <div class="mb-3">
                                             <label for="department" class="form-label">Department:</label>
-                                            <input type="text" class="form-control" id="department" placeholder="Enter department" value="<?=$teacher['department'];?>" name="department" autocomplete="off">
+                                            <p class="form-control"><?=$teacher['department'];?></p>
                                             </div>
 
                                             <div class="mb-3">
                                             <label for="contact" class="form-label">Contact Number:</label>
-                                            <input type="text" class="form-control" id="contact" placeholder="Enter contact number" value="<?=$teacher['contact'];?>" name="contact" autocomplete="off">
+                                            <p class="form-control"><?=$teacher['contact'];?></p>
                                             </div>
 
                                             <div class="mb-3">
                                             <label for="email" class="form-label">E-mail:</label>
-                                            <input type="email" class="form-control" id="email" placeholder="Enter e-mail" value="<?=$teacher['email'];?>" name="email" autocomplete="off">
+                                            <p class="form-control"><?=$teacher['email'];?></p>
                                             </div>
 
-                                            <div class="mb-3">
+                                            <!--<div class="mb-3">
                                             <label for="password" class="form-label">Password:</label>
                                                 <div class="input-group">
                                                     <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" autocomplete="off">
@@ -150,11 +136,8 @@ $notfound_err = $status = "";
                                                             </button>
                                                         </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="d-flex justify-content-center gap-2 mt-4 mb-2">
-                                            <button type="submit" name="update_teacher" id="teachersbmt" class="btn">Update</button>
-                                            <a class="btn text-white" href="admin-teacher.php" role="button" id="cancel">Cancel</a>
+                                            </div>-->
+                                            <a class="btn text-white pull-right" href="admin-teacher.php" role="button" id="cancel">Back</a>
                                             </div>
                                     </form>
                                 <?php
