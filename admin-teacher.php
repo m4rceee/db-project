@@ -4,7 +4,7 @@ session_start();
 $status1 = $status = $emptyField = "";
 
 if (isset($_SESSION['status'])) {
-    $status = "<div class='alert alert-success alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
+    $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
     unset($_SESSION['status']);
 } 
 
@@ -216,10 +216,16 @@ if (isset($_SESSION['status1'])) {
                                       <td><?= $teacher['full_name']; ?></td>
                                       <td><?= $teacher['department']; ?></td>
                                       <td>
-                                        <a href="teacher-view.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-primary btn-sm">View</a>
-                                        <a href="teacher-edit.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-success btn-sm">Edit</a>
+                                        <a href="teacher-view.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-sm">
+                                          <img src="info.svg">
+                                        </a>
+                                        <a href="teacher-edit.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-sm">
+                                        <img src="edit.svg">
+                                        </a>
                                         <form action="teacher-delete.php" method="POST" class="d-inline">
-                                            <button type="submit" name="delete_teacher" value="<?= $teacher['EMP']; ?>" class="btn btn-danger btn-sm">Delete</button>
+                                            <button type="submit" name="delete_teacher" value="<?= $teacher['EMP']; ?>" class="btn btn-sm">
+                                              <img src="delete.svg">
+                                            </button>
                                         </form> 
                                       </td> 
                                     </tr>
@@ -242,7 +248,7 @@ if (isset($_SESSION['status1'])) {
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Teacher Registered!</h5>
-              <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
               <p>Here are the credentials needed for logging in:</p>
@@ -250,7 +256,7 @@ if (isset($_SESSION['status1'])) {
               <p>Password: <strong><span id="modalPassword"></span></strong></p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #004500;">Close</button>
             </div>
           </div>
         </div>

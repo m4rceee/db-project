@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['status'])) {
-    $status = "<div class='alert alert-success alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
+    $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
     unset($_SESSION['status']);
 } 
 if (isset($_SESSION['status'])) {
