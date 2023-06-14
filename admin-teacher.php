@@ -77,13 +77,8 @@ if (isset($_SESSION['status1'])) {
             $query_run = mysqli_query($con, $query);
 
             if($query_run) {
-          
               session_start();
               $_SESSION['status'] = "Teacher created successfully.";
-  
-              $email = $_POST['email'];
-              $password = $_POST['password'];
-
               $redirectURL = 'admin-teacher.php?success=true&email=' . urlencode($email) . '&password=' . urlencode($password);
               header('Location: ' . $redirectURL);
               exit();
@@ -241,28 +236,42 @@ if (isset($_SESSION['status1'])) {
           </div>
       </div>
 
-      <!-- Modal -->
-    <div class="modal fade" id="registrationModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="registrationModalLabel">Registration Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                  <p>Email: <span id="modalEmail"></span></p>
-                  <p>Password: <span id="modalPassword"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+      <!-- Bootstrap modal -->
+      <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Teacher Registered!</h5>
+              <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
+            <div class="modal-body">
+              <p>Here are the credentials needed for logging in:</p>
+              <p>Email: <strong><span id="modalEmail"></span></strong></p>
+              <p>Password: <strong><span id="modalPassword"></span></strong></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
       <!-- script -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+      <script>
+        // When the document is ready
+        $(document).ready(function() {
+          // If the registration was successful, show the modal
+          <?php if (isset($_GET['success']) && $_GET['success'] == 'true') { ?>
+            $('#myModal').modal('show');
+            var email = "<?php echo $_GET['email']; ?>";
+            var password = "<?php echo $_GET['password']; ?>";
+            $('#modalEmail').text(email);
+            $('#modalPassword').text(password);
+          <?php } ?>
+        });
+      </script>
     </body>
 </html>
