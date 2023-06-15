@@ -19,10 +19,26 @@ if (isset($_SESSION['status1'])) {
     die("Connection Failed: ". mysqli_connect_error());
   }
 
+  $con2 = mysqli_connect("localhost", "root", "", "courses_subj_db");
+
+  if(!$con2) {
+    die("Connection Failed: ". mysqli_connect_error());
+  }
+
+  // Fetch the dropdown options from the database
+  $query = "SELECT DISTINCT course FROM courses_subj";
+  $result = $con2->query($query);
+
+  // Store the options in an array
+  $options = array();
+  while ($row = $result->fetch_assoc()) {
+    $options[] = $row['course'];
+  }
+
   // REGISTRATION PROCESS
   if(isset($_POST['save_student'])) {
 
-    $fieldsToValidate = array('fullname', 'gender', 'birthdate', 'city', 'year', 'course', 'contact', 'email');
+    $fieldsToValidate = array('fullname', 'gender', 'birthdate', 'city', 'year', 'dropdown', 'contact', 'email');
     $allFieldsNotEmpty = true;
 
     // VALIDATION FOR EMPTY FIELDS
@@ -58,7 +74,7 @@ if (isset($_SESSION['status1'])) {
         $birthdate = mysqli_real_escape_string($con, $_POST['birthdate']);
         $city = mysqli_real_escape_string($con, $_POST['city']);
         $year = mysqli_real_escape_string($con, $_POST['year']);
-        $course = mysqli_real_escape_string($con, $_POST['course']);
+        $course = mysqli_real_escape_string($con, $_POST['dropdown']);
         $contact = mysqli_real_escape_string($con, $_POST['contact']);
         $email = mysqli_real_escape_string($con, $_POST['email']);
         $password = generateRandomPassword(8);
@@ -80,13 +96,16 @@ if (isset($_SESSION['status1'])) {
             // REGISTER THE TEACHER IF THERE ISN'T EXISTING ONE ON THE DATABASE
             $query = "INSERT INTO students (student_number, full_name, gender, birthdate, city, year, course, contact, email, password) 
                   VALUES ('$studentNumber', '$fullname', '$gender', '$birthdate', '$city', '$year', '$course', '$contact', '$email', '$password')";
-            
             $query_run = mysqli_query($con, $query);
+
+            /*$query2 = "INSERT INTO students (course) VALUES ('$course')";
+
+            $query_run2 = mysqli_query($con, $query2);*/
 
             if($query_run) {
               session_start();
               $_SESSION['status'] = "Student created successfully.";
-              $redirectURL = 'admin-student.php?success=true&email=' . urlencode($studentNumber) . '&password=' . urlencode($password);
+              $redirectURL = 'admin-student.php?success=true&student_number=' . urlencode($studentNumber) . '&password=' . urlencode($password);
               header('Location: ' . $redirectURL);
               exit();
             } else {
@@ -135,7 +154,7 @@ if (isset($_SESSION['status1'])) {
                 <a class="nav-link" href="admin-student.php" id="nav-item2">Student</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="admin-course&subj.html" id="nav-item3">Course & Subject</a>
+                <a class="nav-link" href="admin-course&subj.php" id="nav-item3">Course & Subject</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="admin-attendance.html" id="nav-item4">Attendance</a>
@@ -180,9 +199,14 @@ if (isset($_SESSION['status1'])) {
                             <input type="number" class="form-control" id="year" placeholder="Enter year" name="year" autocomplete="off">
                           </div>
 
-                          <div class="mb-3">
-                            <label for="course" class="form-label">Course:</label>
-                            <input type="text" class="form-control" id="course" placeholder="Enter course" name="course" autocomplete="off">
+                          <div class="form- mb-3">
+                            <label for="dropdown" style="color: #fff; margin-bottom: 7px;">Course:</label>
+                            <select class="form-select" id="dropdown" name="dropdown">
+                            <option selected disabled>Select a course</option> 
+                              <?php foreach ($options as $option): ?>
+                                <option value="<?php echo $option; ?>"><?php echo $option; ?></option>
+                              <?php endforeach; ?>
+                            </select>
                           </div>
                           
                           <div class="mb-3">
@@ -299,6 +323,12 @@ if (isset($_SESSION['status1'])) {
             $('#modalPassword').text(password);
           <?php } ?>
         });
+
+        /*function updateDropdownButton(selectedCourse) {
+          document.getElementById("dropdown").textContent = selectedCourse;
+          document.getElementById("selectedCourse").value = selectedCourse;
+        }*/
+
       </script>
   </body>
 </html>

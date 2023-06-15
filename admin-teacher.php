@@ -128,7 +128,7 @@ if (isset($_SESSION['status1'])) {
                   <a class="nav-link" href="admin-student.php" id="nav-item2">Student</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="admin-course&subj.html" id="nav-item3">Course & Subject</a>
+                  <a class="nav-link" href="admin-course&subj.php" id="nav-item3">Course & Subject</a>
               </li>
               <li class="nav-item">
                   <a class="nav-link" href="admin-attendance.html" id="nav-item4">Attendance</a>

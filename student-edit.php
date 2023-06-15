@@ -18,6 +18,22 @@ $notfound_err = $status = "";
       die("Connection Failed: ". mysqli_connect_error());
     }
 
+    $con2 = mysqli_connect("localhost", "root", "", "courses_subj_db");
+
+    if(!$con2) {
+    die("Connection Failed: ". mysqli_connect_error());
+    }
+    
+    // Fetch the dropdown options from the database
+    $query = "SELECT DISTINCT course FROM courses_subj";
+    $result = $con2->query($query);
+    
+    // Store the options in an array
+    $options = array();
+    while ($row = $result->fetch_assoc()) {
+    $options[] = $row['course'];
+    }
+
     // UPDATE RECORD
     if(isset($_POST['update_student'])) {
         $student_id = mysqli_real_escape_string($con, $_POST['student_id']);
@@ -26,7 +42,7 @@ $notfound_err = $status = "";
         $birthdate = mysqli_real_escape_string($con, $_POST['birthdate']);
         $city = mysqli_real_escape_string($con, $_POST['city']);
         $year = mysqli_real_escape_string($con, $_POST['year']);
-        $course = mysqli_real_escape_string($con, $_POST['course']);
+        $course = mysqli_real_escape_string($con, $_POST['dropdown']);
         $contact = mysqli_real_escape_string($con, $_POST['contact']);
         $email = mysqli_real_escape_string($con, $_POST['email']);
         $password = mysqli_real_escape_string($con, $_POST['password']);
@@ -137,9 +153,14 @@ $notfound_err = $status = "";
                                                 <input type="number" class="form-control" value="<?=$student['year'];?>" id="year" placeholder="Enter year" name="year" autocomplete="off">
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label for="course" class="form-label">Course:</label>
-                                                <input type="text" class="form-control" value="<?=$student['course'];?>" id="course" placeholder="Enter course" name="course" autocomplete="off">
+                                            <div class="form- mb-3">
+                                                <label for="dropdown" style="color: #fff; margin-bottom: 7px;">Course:</label>
+                                                <select class="form-select" id="dropdown" name="dropdown">
+                                                <option selected disabled><?php echo $student['course']; ?></option> 
+                                                <?php foreach ($options as $option): ?>
+                                                    <option value="<?php echo $option; ?>"><?php echo $option; ?></option>
+                                                <?php endforeach; ?>
+                                                </select>
                                             </div>
                                             
                                             <div class="mb-3">
