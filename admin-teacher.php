@@ -125,7 +125,7 @@ if (isset($_SESSION['status1'])) {
                   <a class="nav-link" href="admin-teacher.php" id="nav-item1">Teacher</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="admin-student.html" id="nav-item2">Student</a>
+                  <a class="nav-link" href="admin-student.php" id="nav-item2">Student</a>
               </li>
               <li class="nav-item">
                   <a class="nav-link" href="admin-course&subj.html" id="nav-item3">Course & Subject</a>
@@ -193,7 +193,7 @@ if (isset($_SESSION['status1'])) {
                       <div class="card-title">
                           <h1 style="color: #004500;">TEACHERS:</h1>
                       </div>
-                      <table class="table table-bordered table-striped" id="table-bg">
+                      <table class="table table-bordered table-striped">
                           <thead>
                             <tr>
                               <th>EMP</th>
