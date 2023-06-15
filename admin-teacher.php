@@ -220,7 +220,7 @@ if (isset($_SESSION['status1'])) {
                                           <img src="info.svg">
                                         </a>
                                         <a href="teacher-edit.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-sm">
-                                        <img src="edit.svg">
+                                          <img src="edit.svg">
                                         </a>
                                         <form action="teacher-delete.php" method="POST" class="d-inline">
                                             <button type="submit" name="delete_teacher" value="<?= $teacher['EMP']; ?>" class="btn btn-sm">

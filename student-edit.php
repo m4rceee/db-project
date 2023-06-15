@@ -12,44 +12,45 @@ if (isset($_SESSION['status'])) {
 
 $notfound_err = $status = "";
 
-    $con = mysqli_connect("localhost", "root", "", "teachers_db");
+    $con = mysqli_connect("localhost", "root", "", "students_db");
 
     if(!$con) {
       die("Connection Failed: ". mysqli_connect_error());
     }
 
     // UPDATE RECORD
-    if(isset($_POST['update_teacher'])) {
-        $teacher_id = mysqli_real_escape_string($con, $_POST['teacher_id']);
+    if(isset($_POST['update_student'])) {
+        $student_id = mysqli_real_escape_string($con, $_POST['student_id']);
         $fullname = mysqli_real_escape_string($con, $_POST['fullname']);
         $gender = mysqli_real_escape_string($con, $_POST['gender']);
         $birthdate = mysqli_real_escape_string($con, $_POST['birthdate']);
         $city = mysqli_real_escape_string($con, $_POST['city']);
-        $department = mysqli_real_escape_string($con, $_POST['department']);
+        $year = mysqli_real_escape_string($con, $_POST['year']);
+        $course = mysqli_real_escape_string($con, $_POST['course']);
         $contact = mysqli_real_escape_string($con, $_POST['contact']);
         $email = mysqli_real_escape_string($con, $_POST['email']);
         $password = mysqli_real_escape_string($con, $_POST['password']);
 
-            $sql = "SELECT password FROM teachers WHERE EMP = ? AND password = ?";
+            $sql = "SELECT password FROM students WHERE student_number = ? AND password = ?";
                 $stmt = $con->prepare($sql);
-                $stmt->bind_param("ss", $teacher_id, $password);
+                $stmt->bind_param("ss", $student_id, $password);
                 $stmt->execute();
                 $result = $stmt->get_result();
 
                 if ($result->num_rows > 0) {
-                    $query = "UPDATE teachers SET full_name='$fullname', gender='$gender', birthdate='$birthdate', 
-                                city='$city', department='$department', contact='$contact', email='$email' 
-                                WHERE EMP='$teacher_id'";
+                    $query = "UPDATE students SET full_name='$fullname', gender='$gender', birthdate='$birthdate', 
+                                city='$city', year='$year', course='$course', contact='$contact', email='$email' 
+                                WHERE student_number='$student_id'";
                     $query_run = mysqli_query($con, $query);
                     if($query_run) {
                         session_start();
-                        $_SESSION['status'] = "Teacher updated successfully.";
-                        header("Location: admin-teacher.php");
+                        $_SESSION['status'] = "Student updated successfully.";
+                        header("Location: admin-student.php");
                         exit();
                       } else {
                         session_start();
-                        $_SESSION['status'] = "Teacher update unsuccessful.";
-                        header("Location: admin-teacher.php");
+                        $_SESSION['status'] = "Student update unsuccessful.";
+                        header("Location: admin-student.php");
                         exit();
                       }
                 } else {
@@ -72,7 +73,7 @@ $notfound_err = $status = "";
           @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
       </style>
       
-      <title>Teacher Edit</title>
+      <title>Student Edit</title>
   </head>
 
   <body>
@@ -90,55 +91,66 @@ $notfound_err = $status = "";
               <div class="card mt-5 mx-auto" id="regiscard">
                   <div class="card-body">
                     <div class="card-title">
-                            <h1>EDIT TEACHER:</h1>
+                            <h1>EDIT STUDENT:</h1>
                             <?php echo $notfound_err; ?>
                     </div>
                     <?php
-                        if(isset($_GET['EMP'])) {
-                            $teacher_id = mysqli_real_escape_string($con, $_GET['EMP']);
-                            $query = "SELECT * FROM teachers WHERE EMP='$teacher_id'";
+                        if(isset($_GET['student_number'])) {
+                            $student_id = mysqli_real_escape_string($con, $_GET['student_number']);
+                            $query = "SELECT * FROM students WHERE student_number='$student_id'";
                             $query_run = mysqli_query($con, $query);
 
                             if(mysqli_num_rows($query_run) > 0) {
-                                $teacher = mysqli_fetch_array($query_run);
+                                $student = mysqli_fetch_array($query_run);
                                 ?>
-                                    <form action="teacher-edit.php" method="POST">
-                                        <input type="hidden" name="teacher_id" value="<?= $teacher_id?>">
+                                    <form action="student-edit.php" method="POST">
+                                        <input type="hidden" name="student_id" value="<?= $student_id?>">
+                                            
+                                            <div class="mb-3 mt-3">
+                                            <label for="fullname" class="form-label">Student Number:</label>
+                                            <span style="color: #004500; font-size: 12px;"><p><strong>*Please use this as a credential for logging in the user.</strong></p></span>
+                                            <p class="form-control"><?=$student['student_number'];?></p>        
+                                            </div>
 
                                             <div class="mb-3 mt-3">
-                                            <label for="fullname" class="form-label">Full Name:</label>
-                                            <input type="text" class="form-control" id="fullname" placeholder="Enter full name" value="<?=$teacher['full_name'];?>" name="fullname" autocomplete="off"> 
+                                                <label for="fullname" class="form-label">Full Name:</label>
+                                                <input type="text" class="form-control" value="<?=$student['full_name'];?>" id="fullname" placeholder="Enter full name" name="fullname" autocomplete="off"> 
                                             </div>
 
                                             <div class="mb-3">
-                                            <label for="gender" class="form-label">Gender:</label>
-                                            <input type="text" class="form-control" id="gender" placeholder="Enter gender" value="<?=$teacher['gender'];?>" name="gender" autocomplete="off">
+                                                <label for="gender" class="form-label">Gender:</label>
+                                                <input type="text" class="form-control" value="<?=$student['gender'];?>" id="gender" placeholder="Enter gender" name="gender" autocomplete="off">
                                             </div>
 
                                             <div class="mb-3">
-                                            <label for="birthdate" class="form-label">Date of Birth:</label>
-                                            <input type="date" class="form-control" id="birthdate" placeholder="Enter birth date" value="<?=$teacher['birthdate'];?>" name="birthdate" autocomplete="off">
+                                                <label for="birthdate" class="form-label">Date of Birth:</label>
+                                                <input type="date" class="form-control" value="<?=$student['birthdate'];?>" id="birthdate" placeholder="Enter birth date" name="birthdate" autocomplete="off">
                                             </div>
 
                                             <div class="mb-3">
-                                            <label for="city" class="form-label">City:</label>
-                                            <input type="text" class="form-control" id="city" placeholder="Enter city" value="<?=$teacher['city'];?>" name="city" autocomplete="off">
+                                                <label for="city" class="form-label">City:</label>
+                                                <input type="text" class="form-control" value="<?=$student['city'];?>" id="city" placeholder="Enter city" name="city" autocomplete="off">
                                             </div>
 
                                             <div class="mb-3">
-                                            <label for="department" class="form-label">Department:</label>
-                                            <input type="text" class="form-control" id="department" placeholder="Enter department" value="<?=$teacher['department'];?>" name="department" autocomplete="off">
+                                                <label for="year" class="form-label">Year:</label>
+                                                <input type="number" class="form-control" value="<?=$student['year'];?>" id="year" placeholder="Enter year" name="year" autocomplete="off">
                                             </div>
 
                                             <div class="mb-3">
-                                            <label for="contact" class="form-label">Contact Number:</label>
-                                            <input type="text" class="form-control" id="contact" placeholder="Enter contact number" value="<?=$teacher['contact'];?>" name="contact" autocomplete="off">
+                                                <label for="course" class="form-label">Course:</label>
+                                                <input type="text" class="form-control" value="<?=$student['course'];?>" id="course" placeholder="Enter course" name="course" autocomplete="off">
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="contact" class="form-label">Contact Number:</label>
+                                                <input type="text" class="form-control" value="<?=$student['contact'];?>" id="contact" placeholder="Enter contact number" name="contact" autocomplete="off">
                                             </div>
 
                                             <div class="mb-3">
-                                            <label for="email" class="form-label">E-mail:</label>
-                                            <input type="email" class="form-control" id="email" placeholder="Enter e-mail" value="<?=$teacher['email'];?>" name="email" autocomplete="off">
-                                            </div>
+                                                <label for="email" class="form-label">E-mail:</label>
+                                                <input type="email" class="form-control" value="<?=$student['email'];?>" id="email" placeholder="Enter e-mail" name="email" autocomplete="off">
+                                                </div>
 
                                             <div class="mb-3">
                                             <label for="password" class="form-label">Password:</label>
@@ -153,20 +165,19 @@ $notfound_err = $status = "";
                                             </div>
 
                                             <div class="d-flex justify-content-center gap-2 mt-4 mb-2">
-                                            <button type="submit" name="update_teacher" id="teachersbmt" class="btn">Update</button>
-                                            <a class="btn text-white" href="admin-teacher.php" role="button" id="cancel">Cancel</a>
+                                            <button type="submit" name="update_student" id="teachersbmt" class="btn">Update</button>
+                                            <a class="btn text-white" href="admin-student.php" role="button" id="cancel">Cancel</a>
                                             </div>
-                                    </form>
-                                <?php
-                            } else {
-                                echo "No such teacher found!.";
-                            }
-                        }
-                    ?>
-                      
-                  </div>
-              </div>
-          </div>
+                                        </form>
+                                        <?php
+                                    } else {
+                                        echo "No such student found!.";
+                                    }
+                                }
+                            ?>
+                     </div>
+                </div>
+            </div>
 
                 <!-- script -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

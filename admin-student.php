@@ -50,8 +50,8 @@ if (isset($_SESSION['status1'])) {
       // STUDENT NUMBER GENERATION
       $currentYear = date('Y');
       $random_number = mt_rand(10000, 99999);
-      $studentid = $currentYear . $random_number;
-      $studentid = str_pad($studentid, 9, '0', STR_PAD_LEFT);
+      $studentNumber = $currentYear . $random_number;
+      $studentNumber = str_pad($studentNumber, 9, '0', STR_PAD_LEFT);
  
         $fullname = mysqli_real_escape_string($con, $_POST['fullname']);
         $gender = mysqli_real_escape_string($con, $_POST['gender']);
@@ -79,14 +79,14 @@ if (isset($_SESSION['status1'])) {
 
             // REGISTER THE TEACHER IF THERE ISN'T EXISTING ONE ON THE DATABASE
             $query = "INSERT INTO students (student_number, full_name, gender, birthdate, city, year, course, contact, email, password) 
-                  VALUES ('$studentid', '$fullname', '$gender', '$birthdate', '$city', '$year', '$course', '$contact', '$email', '$password')";
+                  VALUES ('$studentNumber', '$fullname', '$gender', '$birthdate', '$city', '$year', '$course', '$contact', '$email', '$password')";
             
             $query_run = mysqli_query($con, $query);
 
             if($query_run) {
               session_start();
               $_SESSION['status'] = "Student created successfully.";
-              $redirectURL = 'admin-student.php?success=true&email=' . urlencode($studentid) . '&password=' . urlencode($password);
+              $redirectURL = 'admin-student.php?success=true&email=' . urlencode($studentNumber) . '&password=' . urlencode($password);
               header('Location: ' . $redirectURL);
               exit();
             } else {
@@ -132,7 +132,7 @@ if (isset($_SESSION['status1'])) {
                 <a class="nav-link" href="admin-teacher.php" id="nav-item1">Teacher</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="admin-student.html" id="nav-item2">Student</a>
+                <a class="nav-link" href="admin-student.php" id="nav-item2">Student</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="admin-course&subj.html" id="nav-item3">Course & Subject</a>
@@ -237,14 +237,14 @@ if (isset($_SESSION['status1'])) {
                                     <td><?= $student['year']; ?></td>
                                     <td><?= $student['course']; ?></td>
                                     <td>
-                                      <a href="student-view.php?EMP=<?= $student['EMP']; ?>" class="btn btn-sm">
+                                      <a href="student-view.php?student_number=<?= $student['student_number']; ?>" class="btn btn-sm">
                                         <img src="info.svg">
                                       </a>
-                                      <a href="student-edit.php?EMP=<?= $student['EMP']; ?>" class="btn btn-sm">
+                                      <a href="student-edit.php?student_number=<?= $student['student_number']; ?>" class="btn btn-sm">
                                       <img src="edit.svg">
                                       </a>
                                       <form action="student-delete.php" method="POST" class="d-inline">
-                                          <button type="submit" name="delete_student" value="<?= $student['EMP']; ?>" class="btn btn-sm">
+                                          <button type="submit" name="delete_student" value="<?= $student['student_number']; ?>" class="btn btn-sm">
                                             <img src="delete.svg">
                                           </button>
                                       </form> 

@@ -12,27 +12,27 @@ if (isset($_SESSION['status'])) {
 
 $status="";
 
-    $con = mysqli_connect("localhost", "root", "", "teachers_db");
+    $con = mysqli_connect("localhost", "root", "", "students_db");
 
     if(!$con) {
     die("Connection Failed: ". mysqli_connect_error());
     }
 
-    if(isset($_POST['delete_teacher'])) {
-        $teacher_id = mysqli_real_escape_string($con, $_POST['delete_teacher']);
+    if(isset($_POST['delete_student'])) {
+        $student_id = mysqli_real_escape_string($con, $_POST['delete_student']);
 
-        $query = "DELETE FROM teachers where EMP='$teacher_id'";
+        $query = "DELETE FROM students where student_number='$student_id'";
         $query_run = mysqli_query($con, $query);
 
         if($query_run) {
             session_start();
-            $_SESSION['status'] = "Teacher deleted successfully.";
-            header("Location: admin-teacher.php");
+            $_SESSION['status'] = "Student deleted successfully.";
+            header("Location: admin-student.php");
             exit();
         } else {
             session_start();
-            $_SESSION['status'] = "Teacher delete unsuccessfull.";
-            header("Location: admin-teacher.php");
+            $_SESSION['status'] = "Student delete unsuccessful.";
+            header("Location: admin-student.php");
             exit();
         }
     } else {
