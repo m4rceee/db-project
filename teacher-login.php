@@ -1,45 +1,42 @@
-<?
+<?php
 
-$both_err = $notfound_err = $username_err = $password_err="";
+$both_err = $notfound_err = $email_err = $password_err="";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        if(empty($_POST['username']) && !empty($_POST['pswd'])) {
-            $username_err = "<div class='alert alert-danger mt-2'><strong>Please enter a username.<strong></div>";
+        if(!empty($_POST['email']) && !empty($_POST['pswd'])) {
+            $email = $_POST['email'];
+            $pswd = $_POST['pswd'];
+
+            $mysqli = new mysqli("localhost", "root", "", "teachers_db");
+
+            if ($mysqli->connect_errno) {
+                $error_code = $mysqli->connect_errno;
+                $error_message = $mysqli->connect_error;
+                echo "The connection to the database failed with error code $error_code and error message $error_message";
+            } else {
+                $sql = "SELECT * FROM teachers WHERE email = ? AND password = ?";
+                $stmt = $mysqli->prepare($sql);
+                $stmt->bind_param("ss", $email, $pswd);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    header("Location: admin-teacher.php");
+                    exit();
+                } else {
+                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect email or password.</strong></div>";
+                }
+            }
+        } else if(empty($_POST['email']) && !empty($_POST['pswd'])) {
+            $email_err = "<div class='alert alert-danger mt-2'><strong>Please enter an e-mail.<strong></div>";
         } 
-        if(empty($_POST['pswd']) && !empty($_POST['username'])) {
+        else if(empty($_POST['pswd']) && !empty($_POST['email'])) {
             $password_err = "<div class='alert alert-danger mt-2'><strong>Please enter a password.</strong></div>";
         }
-        if(empty($_POST['username']) && empty($_POST['pswd'])) {
+        else if(empty($_POST['email']) && empty($_POST['pswd'])) {
             $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
-        }
-
-        $username = $_POST['username'];
-        $pswd = $_POST['pswd'];
-
-        $mysqli = new mysqli("localhost", "root", "", "teacher_db");
-
-        if ($mysqli->connect_errno) {
-            $error_code = $mysqli->connect_errno;
-            $error_message = $mysqli->connect_error;
-            echo "The connection to the database failed with error code $error_code and error message $error_message";
-        } else {
-            $sql = "SELECT * FROM teacher_user WHERE teacher_email = ? AND password = ?";
-            $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param("ss", $username, $pswd);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                header("Location: admin-teacher.php");
-                exit();
-            } else {
-                $notfound_err = "<div class='alert alert-danger mt-2'><strong>Cannot find the user.</strong></div>";
-            }
         } 
     } 
-    
-
-
 ?>
 
 <!DOCTYPE html>
@@ -73,28 +70,29 @@ $both_err = $notfound_err = $username_err = $password_err="";
     <div class="cn-1 container">
         <div class="card mx-auto">
             <div class="card-body">
-                <form action="admin-login.php" method="POST">
+                <form action="teacher-login.php" method="POST">
                     <div class="card-title text-center mt-3 mb-2">
                         <h5 class="adminlogin">Teacher Log In</h5>
                         <?php echo $notfound_err; ?>
                     </div>
                     <div class="mb-3 mt-3">
-                      <label for="username" class="form-label"><strong>Email:</strong></label>
-                      <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" autocomplete="off">
-                        <?php echo $username_err; ?>
+                      <label for="email" class="form-label"><strong>Email:</strong></label>
+                      <input type="email" class="form-control" id="email" placeholder="Enter e-mail" name="email" autocomplete="off">
+                        <?php echo $email_err; ?>
                         <?php echo $both_err; ?>
                     </div>
                     <div class="mb-4">
                       <label for="pwd" class="form-label"><strong>Password:</strong></label>
-                        <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off">
-                        <?php echo $password_err; ?>
+                      <div class="input-group">
+                            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off">
+                            <div class="input-group-text">
+                                <button class="btn" type="button" id="eye">
+                                    <img src="eye-slash.svg">
+                                </button>
+                            </div>
+                      </div>
+                      <?php echo $password_err; ?>
                         <?php echo $both_err; ?>
-                        <!--<span class="input-group-text">
-                            <button class="btn" id="eye">
-                                <img src="eye-slash.svg">
-                            </button>
-                        </span>-->
-                      
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" id="admnsbmt" class="btn btn-primary">Log In</button>
