@@ -1,4 +1,6 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
 $fullname_err = $subjcode_err = $status1 = $status = $both_err = $emptyField = "";
@@ -13,193 +15,73 @@ if (isset($_SESSION['status1'])) {
   unset($_SESSION['status1']);
 }
 
-$con = mysqli_connect("localhost", "root", "", "teachers_db");
-    if(!$con) {
-      die("Connection Failed: ". mysqli_connect_error());
-    }
-
-$con2 = mysqli_connect("localhost", "root", "", "students_db");
-    if(!$con2) {
-      die("Connection Failed: ". mysqli_error($con2));
-}
-
-$con3 = mysqli_connect("localhost", "root", "", "courses_subj_db");
-    if(!$con3) {
-      die("Connection Failed: ". mysqli_error($con3));
-}
-
-$con4 = mysqli_connect("localhost", "root", "", "attendance_db");
-    if(!$con4) {
-      die("Connection Failed: ". mysqli_error($con4));
-}
-
 if(isset($_POST['submit_student'])) {
 
-  /*if(!empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
-    $teacherId = mysqli_real_escape_string($con, $_GET['EMP']);
-    $studentName = mysqli_real_escape_string($con2, $_POST['fullname']);
-    $subjectCode = mysqli_real_escape_string($con3, $_POST['subjectcode']);
+  if (!empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
 
-    // Get the current date
-    $currentDate = date('Y-m-d');
+    $teacherId = mysqli_real_escape_string($conn, $_GET['EMP']);
+    $studentName = mysqli_real_escape_string($conn, $_POST['fullname']);
+    $subjectCode = mysqli_real_escape_string($conn, $_POST['subjectcode']);
+    $currentDate = date('Y-m-d'); // get current date
+  
+    // VALIDATION FOR EXISTING STUDENT
+    $query = "SELECT student_number, full_name, year, course FROM students WHERE full_name = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $studentName);
+    mysqli_stmt_execute($stmt);
+    $studentResult = mysqli_stmt_get_result($stmt);
+  
+    // VALIDATION FOR EXISTING SUBJECT
+    $query2 = "SELECT subj_code FROM subjects WHERE subj_code = ?";
+    $stmt2 = mysqli_prepare($conn, $query2);
+    mysqli_stmt_bind_param($stmt2, "s", $subjectCode);
+    mysqli_stmt_execute($stmt2);
+    $subjectResult = mysqli_stmt_get_result($stmt2);
+  
+    if (mysqli_num_rows($studentResult) > 0 && mysqli_num_rows($subjectResult) > 0) {
 
-    $studentQuery = "SELECT * FROM students WHERE full_name = '$studentName'";
-    $subjectQuery = "SELECT * FROM courses_sbj WHERE subj_code = '$subjectCode'";
+      $studentRow = mysqli_fetch_assoc($studentResult);
+      $subjectRow = mysqli_fetch_assoc($subjectResult);
 
-    $con4 = mysqli_connect("localhost", "root", "", "attendance_db");
-      if(!$con4) {
-        die("Connection Failed: ". mysqli_error($con4));
-      } else {
-        
-        // VALIDATION FOR EXISTING STUDENT
-        $query = "SELECT full_name FROM students WHERE full_name = ?";
-          $stmt = mysqli_prepare($con2, $query);
-          mysqli_stmt_bind_param($stmt, "s", $studentName);
-          mysqli_stmt_execute($stmt);
-          mysqli_stmt_store_result($stmt);
-
-          if (mysqli_stmt_num_rows($stmt) > 0 && mysqli_stmt_num_rows($stmt2) > 0) {
-            
-            // FETCH THE REQUIRED ROWS
-            $query = "SELECT student_number, full_name, year, course FROM students WHERE full_name = '$studentName'";
-            $result = mysqli_query($con, $query);
-
-            $query2 = "SELECT subj_code FROM courses_subj WHERE subj_code = '$subjectCode'";
-            $result2 = mysqli_query($con, $query2);
-
-            if ($result && $result2) {
-
-                // FETCH THE ROWS FROM THE RESULT
-                while ($row = mysqli_fetch_assoc($result && $result2)) {
-
-                    // STORE THE VALUES INTO THE VARIABLES
-                    $column1Value = $row['student_number'];
-                    $column2Value = $row['full_name'];
-                    $column3Value = $row['year'];
-                    $column4Value = $row['course'];
-                    $column5Value = $row['subj_code'];
-
-                    // INSERT INTO THE ATTENDANCE DATABASE
-                    $con4 = mysqli_connect("localhost", "root", "", "attendance_db");
-
-                    $query = "INSERT INTO attendance (student_number, full_name, year, course, subj_code, date)
-                              VALUES ('$column1Value', '$column2Value', '$column3Value', '$column4Value', '$column5Value', '$currentDate')";
-                    
-                    $query_run = mysqli_query($con4, $query);
-
-                    if($query_run) {
-                      session_start();
-                      $_SESSION['status'] = "Student added successfully.";
-                      header("Location: teacher.php?EMP=".$teacher_id);
-                      exit();
-                    } else {
-                      session_start();
-                      $_SESSION['status1'] = "Adding student error.";
-                      header("Location: teacher.php?EMP=".$teacher_id);
-                      exit();
-                  }
-                } 
-            }
-          } else {
-            session_start();
-            $_SESSION['status1'] = "Student or Subject doesn't exist.";
-            header("Location: teacher.php?EMP=".$teacher_id);
-            exit();
-          }
-        }
-  } else if(empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
-      $fullname_err = "<div class='alert alert-danger mt-2'><strong>Please enter an e-mail.<strong></div>";
-  } 
-  else if(empty($_POST['subjectcode']) && !empty($_POST['fullname'])) {
-      $subjcode_err = "<div class='alert alert-danger mt-2'><strong>Please enter a password.</strong></div>";
+                // STORE THE VALUES INTO THE VARIABLES
+                $column1Value = $studentRow['student_number'];
+                $column2Value = $studentRow['full_name'];
+                $column3Value = $studentRow['year'];
+                $column4Value = $studentRow['course'];
+                $column5Value = $subjectRow['subj_code'];
+  
+                // INSERT INTO THE ATTENDANCE DATABASE
+                $query = "INSERT INTO attendance (teacher_id, student_number, full_name, year, course, subj_code, date)
+                          VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $stmt = mysqli_prepare($conn, $query);
+                mysqli_stmt_bind_param($stmt, "sssssss", $teacherId, $column1Value, $column2Value, $column3Value, $column4Value, $column5Value, $currentDate);
+                mysqli_stmt_execute($stmt);
+  
+                if (mysqli_stmt_affected_rows($stmt) > 0) {
+                    session_start();
+                    $_SESSION['status'] = "Student added successfully.";
+                    header("Location: teacher.php?EMP=$teacherId");
+                    exit();
+                } else {
+                    session_start();
+                    $_SESSION['status1'] = "Adding student error.";
+                    header("Location: teacher.php?EMP=$teacherId");
+                    exit();
+                }
+    } else {
+        session_start();
+        $_SESSION['status1'] = "Student or Subject doesn't exist.";
+        header("Location: teacher.php?EMP=$teacherId");
+        exit();
+    }
+  } else if (empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
+    $fullname_err = "<div class='alert alert-danger mt-2'><strong>Please enter student name.<strong></div>";
+  } else if (!empty($_POST['fullname']) && empty($_POST['subjectcode'])) {
+    $subjcode_err = "<div class='alert alert-danger mt-2'><strong>Please enter a subject code.</strong></div>";
+  } else if (empty($_POST['fullname']) && empty($_POST['subjectcode'])) {
+    $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
   }
-  else if(empty($_POST['fullname']) && empty($_POST['subjectcode'])) {
-      $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
-  }
-}*/
-
-if (!empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
-
-  $teacherId = mysqli_real_escape_string($con, $_GET['EMP']);
-  $studentName = mysqli_real_escape_string($con, $_POST['fullname']);
-  $subjectCode = mysqli_real_escape_string($con, $_POST['subjectcode']);
-
-  // Get the current date
-  $currentDate = date('Y-m-d');
-
-  // VALIDATION FOR EXISTING STUDENT
-  $query = "SELECT full_name FROM students WHERE full_name = ?";
-  $stmt = mysqli_prepare($con, $query);
-  mysqli_stmt_bind_param($stmt, "s", $studentName);
-  mysqli_stmt_execute($stmt);
-  mysqli_stmt_store_result($stmt);
-
-  // VALIDATION FOR EXISTING SUBJECT
-  $query2 = "SELECT subj_code FROM courses_subj WHERE subj_code = ?";
-  $stmt2 = mysqli_prepare($con, $query2);
-  mysqli_stmt_bind_param($stmt2, "s", $subjectCode);
-  mysqli_stmt_execute($stmt2);
-  mysqli_stmt_store_result($stmt2);
-
-  if (mysqli_stmt_num_rows($stmt) > 0 && mysqli_stmt_num_rows($stmt2) > 0) {
-      // FETCH THE REQUIRED ROWS
-      $query = "SELECT student_number, full_name, year, course FROM students WHERE full_name = ?";
-      $stmt = mysqli_prepare($con, $query);
-      mysqli_stmt_bind_param($stmt, "s", $studentName);
-      mysqli_stmt_execute($stmt);
-      $result = mysqli_stmt_get_result($stmt);
-
-      $query2 = "SELECT subj_code FROM courses_subj WHERE subj_code = ?";
-      $stmt2 = mysqli_prepare($con, $query2);
-      mysqli_stmt_bind_param($stmt2, "s", $subjectCode);
-      mysqli_stmt_execute($stmt2);
-      $result2 = mysqli_stmt_get_result($stmt2);
-
-      if ($result && $result2) {
-          // FETCH THE ROWS FROM THE RESULT
-          while ($row = mysqli_fetch_assoc($result)) {
-              // STORE THE VALUES INTO THE VARIABLES
-              $column1Value = $row['student_number'];
-              $column2Value = $row['full_name'];
-              $column3Value = $row['year'];
-              $column4Value = $row['course'];
-              $column5Value = $subjectCode;
-
-              // INSERT INTO THE ATTENDANCE DATABASE
-              $query = "INSERT INTO attendance (student_number, full_name, year, course, subj_code, date)
-                        VALUES (?, ?, ?, ?, ?, ?)";
-              $stmt = mysqli_prepare($con4, $query);
-              mysqli_stmt_bind_param($stmt, "ssssss", $column1Value, $column2Value, $column3Value, $column4Value, $column5Value, $currentDate);
-              mysqli_stmt_execute($stmt);
-
-              if (mysqli_stmt_affected_rows($stmt) > 0) {
-                  session_start();
-                  $_SESSION['status'] = "Student added successfully.";
-                  header("Location: teacher.php?EMP=<?php echo $teacherId; ?>");
-                  exit();
-              } else {
-                  session_start();
-                  $_SESSION['status1'] = "Adding student error.";
-                  header("Location: teacher.php?EMP=<?php echo $teacherId; ?>");
-                  exit();
-              }
-          }
-      }
-  } else {
-      session_start();
-      $_SESSION['status1'] = "Student or Subject doesn't exist.";
-      header("Location: teacher.php?EMP=<?php echo $teacherId; ?>");
-      exit();
-  }
-} else if (empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
-  $fullname_err = "<div class='alert alert-danger mt-2'><strong>Please enter an e-mail.<strong></div>";
-} else if (!empty($_POST['fullname']) && empty($_POST['subjectcode'])) {
-  $subjcode_err = "<div class='alert alert-danger mt-2'><strong>Please enter a password.</strong></div>";
-} else if (empty($_POST['fullname']) && empty($_POST['subjectcode'])) {
-  $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
 }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -230,12 +112,12 @@ if (!empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
           </div>
       </div>
 
-      <div class="container-fluid">
+      <div class="container">
         <?php
           if(isset($_GET['EMP'])) {
-          $teacher_id = mysqli_real_escape_string($con, $_GET['EMP']);
+          $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
           $query = "SELECT * FROM teachers WHERE EMP='$teacher_id'";
-          $query_run = mysqli_query($con, $query);
+          $query_run = mysqli_query($conn, $query);
 
             if(mysqli_num_rows($query_run) > 0) {
               $teacher = mysqli_fetch_array($query_run);
@@ -246,7 +128,7 @@ if (!empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
                     <img src="user.svg">
                     <h1 class="teachername" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;">Teacher Profile: <strong><?php echo $teacher['full_name'];?></strong>
                     </h1> 
-                    <a href="#" class="chgpass btn btn-sm text-white ms-auto me-0">Change Password</a>
+                    <a class="btn text-white ms-auto me-0" href="#" id="chgpass" style="font-size: 12px;">Change Password</a>
                   </div>
                 </div>
 
@@ -277,36 +159,42 @@ if (!empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
           <div class="col-auto">
             <?php echo $status1; ?>
             <?php echo $status; ?>
-            <?php echo $emptyField; ?>
             <h1 style="color: #004500; margin-right: 20px;">Select a Student:</h1>
           </div>
           <div class="col">
             <?php
               if(isset($_GET['EMP'])) {
-              $teacher_id = mysqli_real_escape_string($con, $_GET['EMP']);
+              $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
               $query = "SELECT * FROM teachers WHERE EMP='$teacher_id'";
-              $query_run = mysqli_query($con, $query);
+              $query_run = mysqli_query($conn, $query);
 
               if(mysqli_num_rows($query_run) > 0) {
                 $teacher = mysqli_fetch_array($query_run);
                 ?>
-                <form action="teacher.php?EMP=<?php echo $teacherId; ?>" method="POST">
+                <form id="teacher-form" method="POST" action="teacher.php?EMP=<?php echo $teacher_id; ?>">
                 <input type="hidden" name="teacher_id" value="<?= $teacher_id?>">
                     <div class="row">
                       <div class="col">
                         <div>
                           <!--<label for="fullname" class="form-label">Student Name:</label>-->
-                          <input type="text" class="form-control" id="fullname" placeholder="Enter student full name" name="fullname" autocomplete="off"> 
+                          <input type="text" class="form-control" id="fullname" placeholder="Enter student full name" name="fullname" autocomplete="off">
+                          <?php echo $both_err; ?> 
+                          <?php echo $fullname_err; ?> 
                         </div>
                       </div>
                       <div class="col">
                         <div>
                           <!--<label for="subjectcode" class="form-label">Subject Code:</label>-->
-                          <input type="text" class="form-control" id="subjectcode" placeholder="Enter subject code" name="subjectcode" autocomplete="off"> 
+                          <input type="text" class="form-control" id="subjectcode" placeholder="Enter subject code" name="subjectcode" autocomplete="off">
+                          <?php echo $both_err; ?> 
+                          <?php echo $subjcode_err; ?> 
                         </div>
                       </div>
                     </div>
-                    <button type="submit" class="btn mt-3 text-white" name="submit_student" id="studentsbmt">Submit</button>
+                    <div class="d-flex gap-2 mt-4 mb-2">
+                      <button type="submit" name="submit_student" id="teachersbmt" class="btn text-white" style="background-color: #004500;">Submit</button>
+                      <a class="btn text-white" href="teacher.php?EMP=<?php echo $teacher_id; ?>" role="button" id="cancel" style="background-color: #004500;">Cancel</a>
+                    </div>
                 </form>
               <?php
                 } else {
@@ -336,9 +224,10 @@ if (!empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
           <tbody>
             <tr>
               <?php
-              
-                $query = "SELECT * FROM attendance";
-                $query_run = mysqli_query($con4, $query);
+
+                $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
+                $query = "SELECT * FROM attendance WHERE teacher_id='$teacher_id'";
+                $query_run = mysqli_query($conn, $query);
 
                 if(mysqli_num_rows($query_run) > 0) {
                   foreach($query_run as $student) {
@@ -400,6 +289,14 @@ if (!empty($_POST['fullname']) && !empty($_POST['subjectcode'])) {
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
       <script>
+
+        // Get the EMP value from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const empValue = urlParams.get('EMP');
+
+        // Set the form action dynamically
+        const form = document.getElementById('teacher-form');
+        form.action = `teacher.php?EMP=${empValue}`;
 
         /* When the document is ready
         $(document).ready(function() {

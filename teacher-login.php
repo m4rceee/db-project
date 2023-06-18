@@ -8,7 +8,7 @@ $both_err = $notfound_err = $email_err = $password_err="";
             $email = $_POST['email'];
             $pswd = $_POST['pswd'];
 
-            $mysqli = new mysqli("localhost", "root", "", "teachers_db");
+            $mysqli = new mysqli("localhost", "root", "", "student_attendance_db");
 
             if ($mysqli->connect_errno) {
                 $error_code = $mysqli->connect_errno;
