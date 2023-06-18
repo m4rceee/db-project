@@ -1,4 +1,6 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
 if (isset($_SESSION['status'])) {
@@ -12,17 +14,17 @@ if (isset($_SESSION['status'])) {
 
 $status="";
 
-    $con = mysqli_connect("localhost", "root", "", "teachers_db");
+    //$con = mysqli_connect("localhost", "root", "", "teachers_db");
 
-    if(!$con) {
+    if(!$conn) {
     die("Connection Failed: ". mysqli_connect_error());
     }
 
     if(isset($_POST['delete_teacher'])) {
-        $teacher_id = mysqli_real_escape_string($con, $_POST['delete_teacher']);
+        $teacher_id = mysqli_real_escape_string($conn, $_POST['delete_teacher']);
 
         $query = "DELETE FROM teachers where EMP='$teacher_id'";
-        $query_run = mysqli_query($con, $query);
+        $query_run = mysqli_query($conn, $query);
 
         if($query_run) {
             session_start();

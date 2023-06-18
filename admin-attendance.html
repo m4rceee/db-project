@@ -20,11 +20,11 @@
         <div class="container-fluid p-3" id="header">
             <div class="d-flex align-items-center mb-3">
                 <img src="logo.svg" alt="Logo" width="85">
-                <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                <a id="logout" href="logout.php">Logout</a>
+                <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
               </div>
-            
         </div>
+
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link" href="admin-teacher.php" id="nav-item1">Teacher</a>
@@ -41,7 +41,7 @@
             </ul>
     </div>
 
-    <div class="container-fluid mt-5">
+    <div class="container-fluid d-flex justify-content-between align-items-center mt-5">
         <h1>ATTENDANCE RECORD:</h1>
         <form class="d-flex">
             <input class="form-control me-2" type="text" placeholder="Search" id="searchinput">
@@ -50,8 +50,8 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-hover table-striped">
+                <thead class="table-success">
                   <tr>
                     <th>Student ID</th>
                     <th>Name</th>

@@ -8,14 +8,14 @@ $both_err = $notfound_err = $username_err = $password_err="";
             $username = $_POST['username'];
             $pswd = $_POST['pswd'];
 
-            $mysqli = new mysqli("localhost", "root", "", "admin_db");
+            $mysqli = new mysqli("localhost", "root", "", "student_attendance_db");
 
             if ($mysqli->connect_errno) {
                 $error_code = $mysqli->connect_errno;
                 $error_message = $mysqli->connect_error;
                 echo "The connection to the database failed with error code $error_code and error message $error_message";
             } else {
-                $sql = "SELECT * FROM admin_user WHERE admin_name = ? AND password = ?";
+                $sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
                 $stmt = $mysqli->prepare($sql);
                 $stmt->bind_param("ss", $username, $pswd);
                 $stmt->execute();
@@ -36,7 +36,7 @@ $both_err = $notfound_err = $username_err = $password_err="";
         else if(empty($_POST['username']) && empty($_POST['pswd'])) {
             $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
         } 
-    } 
+    }
 ?>
 
 <!DOCTYPE html>

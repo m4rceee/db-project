@@ -1,4 +1,6 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
 if (isset($_SESSION['status'])) {
@@ -12,7 +14,7 @@ if (isset($_SESSION['status'])) {
 
 $notfound_err = $status = "";
 
-    $con = mysqli_connect("localhost", "root", "", "students_db");
+    /*$con = mysqli_connect("localhost", "root", "", "students_db");
 
     if(!$con) {
       die("Connection Failed: ". mysqli_connect_error());
@@ -22,11 +24,11 @@ $notfound_err = $status = "";
 
     if(!$con2) {
     die("Connection Failed: ". mysqli_connect_error());
-    }
+    }*/
     
     // Fetch the dropdown options from the database
-    $query = "SELECT DISTINCT course FROM courses_subj";
-    $result = $con2->query($query);
+    $query = "SELECT DISTINCT course FROM subjects";
+    $result = $conn->query($query);
     
     // Store the options in an array
     $options = array();
@@ -36,19 +38,19 @@ $notfound_err = $status = "";
 
     // UPDATE RECORD
     if(isset($_POST['update_student'])) {
-        $student_id = mysqli_real_escape_string($con, $_POST['student_id']);
-        $fullname = mysqli_real_escape_string($con, $_POST['fullname']);
-        $gender = mysqli_real_escape_string($con, $_POST['gender']);
-        $birthdate = mysqli_real_escape_string($con, $_POST['birthdate']);
-        $city = mysqli_real_escape_string($con, $_POST['city']);
-        $year = mysqli_real_escape_string($con, $_POST['year']);
-        $course = mysqli_real_escape_string($con, $_POST['dropdown']);
-        $contact = mysqli_real_escape_string($con, $_POST['contact']);
-        $email = mysqli_real_escape_string($con, $_POST['email']);
-        $password = mysqli_real_escape_string($con, $_POST['password']);
+        $student_id = mysqli_real_escape_string($conn, $_POST['student_id']);
+        $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
+        $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+        $birthdate = mysqli_real_escape_string($conn, $_POST['birthdate']);
+        $city = mysqli_real_escape_string($conn, $_POST['city']);
+        $year = mysqli_real_escape_string($conn, $_POST['year']);
+        $course = mysqli_real_escape_string($conn, $_POST['dropdown']);
+        $contact = mysqli_real_escape_string($conn, $_POST['contact']);
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = mysqli_real_escape_string($conn, $_POST['password']);
 
             $sql = "SELECT password FROM students WHERE student_number = ? AND password = ?";
-                $stmt = $con->prepare($sql);
+                $stmt = $conn->prepare($sql);
                 $stmt->bind_param("ss", $student_id, $password);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -57,7 +59,7 @@ $notfound_err = $status = "";
                     $query = "UPDATE students SET full_name='$fullname', gender='$gender', birthdate='$birthdate', 
                                 city='$city', year='$year', course='$course', contact='$contact', email='$email' 
                                 WHERE student_number='$student_id'";
-                    $query_run = mysqli_query($con, $query);
+                    $query_run = mysqli_query($conn, $query);
                     if($query_run) {
                         session_start();
                         $_SESSION['status'] = "Student updated successfully.";
@@ -94,12 +96,13 @@ $notfound_err = $status = "";
 
   <body>
       <div class="header">
-          <div class="container-fluid p-3">
-              <div class="d-flex align-items-center mb-3">
-                  <img src="logo.svg" alt="Logo" width="85">
-                  <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                  <a id="logout" href="logout.php">Logout</a>
+        <div class="container-fluid p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="logo.svg" alt="Logo" width="85">
+                    <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                    <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>
+            </div>
               
           </div>
       </div>
@@ -112,9 +115,9 @@ $notfound_err = $status = "";
                     </div>
                     <?php
                         if(isset($_GET['student_number'])) {
-                            $student_id = mysqli_real_escape_string($con, $_GET['student_number']);
+                            $student_id = mysqli_real_escape_string($conn, $_GET['student_number']);
                             $query = "SELECT * FROM students WHERE student_number='$student_id'";
-                            $query_run = mysqli_query($con, $query);
+                            $query_run = mysqli_query($conn, $query);
 
                             if(mysqli_num_rows($query_run) > 0) {
                                 $student = mysqli_fetch_array($query_run);

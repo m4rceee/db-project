@@ -1,4 +1,6 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
 if (isset($_SESSION['status'])) {
@@ -12,17 +14,11 @@ if (isset($_SESSION['status'])) {
 
 $status="";
 
-    $con = mysqli_connect("localhost", "root", "", "courses_subj_db");
-
-    if(!$con) {
-    die("Connection Failed: ". mysqli_connect_error());
-    }
-
     if(isset($_POST['delete_course_subj'])) {
-        $subj_id = mysqli_real_escape_string($con, $_POST['delete_course_subj']);
+        $subj_id = mysqli_real_escape_string($conn, $_POST['delete_course_subj']);
 
-        $query = "DELETE FROM courses_subj where subj_id='$subj_id'";
-        $query_run = mysqli_query($con, $query);
+        $query = "DELETE FROM subjects where subj_id='$subj_id'";
+        $query_run = mysqli_query($conn, $query);
 
         if($query_run) {
             session_start();

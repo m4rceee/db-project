@@ -1,9 +1,5 @@
 <?php
-    $con = mysqli_connect("localhost", "root", "", "teachers_db");
-
-    if(!$con) {
-      die("Connection Failed: ". mysqli_connect_error());
-    }
+include("db_conn.php")
 
     /* UPDATE RECORD
     if(isset($_POST['update_teacher'])) {
@@ -64,13 +60,13 @@
 
   <body>
       <div class="header">
-          <div class="container-fluid p-3">
-              <div class="d-flex align-items-center mb-3">
-                  <img src="logo.svg" alt="Logo" width="85">
-                  <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                  <a id="logout" href="logout.php">Logout</a>
+        <div class="container-fluid p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="logo.svg" alt="Logo" width="85">
+                    <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                    <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>
-              
+            </div>
           </div>
       </div>
             <!-- FORM -->
@@ -81,9 +77,9 @@
                     </div>
                     <?php
                         if(isset($_GET['EMP'])) {
-                            $teacher_id = mysqli_real_escape_string($con, $_GET['EMP']);
+                            $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
                             $query = "SELECT * FROM teachers WHERE EMP='$teacher_id'";
-                            $query_run = mysqli_query($con, $query);
+                            $query_run = mysqli_query($conn, $query);
 
                             if(mysqli_num_rows($query_run) > 0) {
                                 $teacher = mysqli_fetch_array($query_run);
@@ -134,7 +130,6 @@
                                             </div>
 
                                             <a class="btn text-white pull-right" href="admin-teacher.php" role="button" id="cancel">Back</a>
-                                            </div>
                                     </form>
                                 <?php
                             } else {

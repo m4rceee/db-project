@@ -1,4 +1,6 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
 $status1 = $status = $emptyField = "";
@@ -13,21 +15,19 @@ if (isset($_SESSION['status1'])) {
   unset($_SESSION['status1']);
 } 
 
-  $con = mysqli_connect("localhost", "root", "", "students_db");
-
+  /*$con = mysqli_connect("localhost", "root", "", "students_db");
   if(!$con) {
     die("Connection Failed: ". mysqli_connect_error());
   }
 
   $con2 = mysqli_connect("localhost", "root", "", "courses_subj_db");
-
   if(!$con2) {
     die("Connection Failed: ". mysqli_connect_error());
-  }
+  }*/
 
   // Fetch the dropdown options from the database
-  $query = "SELECT DISTINCT course FROM courses_subj";
-  $result = $con2->query($query);
+  $query = "SELECT DISTINCT course FROM subjects";
+  $result = $conn->query($query);
 
   // Store the options in an array
   $options = array();
@@ -69,19 +69,19 @@ if (isset($_SESSION['status1'])) {
       $studentNumber = $currentYear . $random_number;
       $studentNumber = str_pad($studentNumber, 9, '0', STR_PAD_LEFT);
  
-        $fullname = mysqli_real_escape_string($con, $_POST['fullname']);
-        $gender = mysqli_real_escape_string($con, $_POST['gender']);
-        $birthdate = mysqli_real_escape_string($con, $_POST['birthdate']);
-        $city = mysqli_real_escape_string($con, $_POST['city']);
-        $year = mysqli_real_escape_string($con, $_POST['year']);
-        $course = mysqli_real_escape_string($con, $_POST['dropdown']);
-        $contact = mysqli_real_escape_string($con, $_POST['contact']);
-        $email = mysqli_real_escape_string($con, $_POST['email']);
+        $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
+        $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+        $birthdate = mysqli_real_escape_string($conn, $_POST['birthdate']);
+        $city = mysqli_real_escape_string($conn, $_POST['city']);
+        $year = mysqli_real_escape_string($conn, $_POST['year']);
+        $course = mysqli_real_escape_string($conn, $_POST['dropdown']);
+        $contact = mysqli_real_escape_string($conn, $_POST['contact']);
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
         $password = generateRandomPassword(8);
 
         // VALIDATION FOR EXISTING STUDENT
         $query = "SELECT email FROM students WHERE email = ?";
-          $stmt = mysqli_prepare($con, $query);
+          $stmt = mysqli_prepare($conn, $query);
           mysqli_stmt_bind_param($stmt, "s", $email);
           mysqli_stmt_execute($stmt);
           mysqli_stmt_store_result($stmt);
@@ -93,10 +93,10 @@ if (isset($_SESSION['status1'])) {
             exit();
           } else {
 
-            // REGISTER THE TEACHER IF THERE ISN'T EXISTING ONE ON THE DATABASE
+            // REGISTER THE STUDENT IF THERE ISN'T EXISTING ONE ON THE DATABASE
             $query = "INSERT INTO students (student_number, full_name, gender, birthdate, city, year, course, contact, email, password) 
                   VALUES ('$studentNumber', '$fullname', '$gender', '$birthdate', '$city', '$year', '$course', '$contact', '$email', '$password')";
-            $query_run = mysqli_query($con, $query);
+            $query_run = mysqli_query($conn, $query);
 
             /*$query2 = "INSERT INTO students (course) VALUES ('$course')";
 
@@ -141,8 +141,8 @@ if (isset($_SESSION['status1'])) {
         <div class="container-fluid p-3">
             <div class="d-flex align-items-center mb-3">
                 <img src="logo.svg" alt="Logo" width="85">
-                <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                <a id="logout" href="logout.php">Logout</a>
+                <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
               </div>
             
         </div>
@@ -236,8 +236,8 @@ if (isset($_SESSION['status1'])) {
                     <div class="card-title">
                         <h1>STUDENTS:</h1>
                     </div>
-                    <table class="table table-bordered table-striped" >
-                        <thead>
+                    <table class="table table-borderless table-striped table-hover" >
+                        <thead class="table-success">
                           <tr>
                             <th>Student Number</th>
                             <th>Name</th>
@@ -250,7 +250,7 @@ if (isset($_SESSION['status1'])) {
                           <?php
 
                             $query = "SELECT * FROM students";
-                            $query_run = mysqli_query($con, $query);
+                            $query_run = mysqli_query($conn, $query);
 
                             if(mysqli_num_rows($query_run) > 0) {
                               foreach($query_run as $student) {
@@ -262,14 +262,14 @@ if (isset($_SESSION['status1'])) {
                                     <td><?= $student['course']; ?></td>
                                     <td>
                                       <a href="student-view.php?student_number=<?= $student['student_number']; ?>" class="btn btn-sm">
-                                        <img src="info.svg">
+                                        <img src="view.svg">
                                       </a>
                                       <a href="student-edit.php?student_number=<?= $student['student_number']; ?>" class="btn btn-sm">
-                                      <img src="edit.svg">
+                                      <img src="user-edit.svg">
                                       </a>
                                       <form action="student-delete.php" method="POST" class="d-inline">
                                           <button type="submit" name="delete_student" value="<?= $student['student_number']; ?>" class="btn btn-sm">
-                                            <img src="delete.svg">
+                                            <img src="user-remove.svg">
                                           </button>
                                       </form> 
                                     </td> 

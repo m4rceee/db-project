@@ -1,4 +1,6 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
 if (isset($_SESSION['status'])) {
@@ -12,26 +14,26 @@ if (isset($_SESSION['status'])) {
 
 $notfound_err = $status = "";
 
-    $con = mysqli_connect("localhost", "root", "", "teachers_db");
+    //$con = mysqli_connect("localhost", "root", "", "teachers_db");
 
-    if(!$con) {
+    if(!$conn) {
       die("Connection Failed: ". mysqli_connect_error());
     }
 
     // UPDATE RECORD
     if(isset($_POST['update_teacher'])) {
-        $teacher_id = mysqli_real_escape_string($con, $_POST['teacher_id']);
-        $fullname = mysqli_real_escape_string($con, $_POST['fullname']);
-        $gender = mysqli_real_escape_string($con, $_POST['gender']);
-        $birthdate = mysqli_real_escape_string($con, $_POST['birthdate']);
-        $city = mysqli_real_escape_string($con, $_POST['city']);
-        $department = mysqli_real_escape_string($con, $_POST['department']);
-        $contact = mysqli_real_escape_string($con, $_POST['contact']);
-        $email = mysqli_real_escape_string($con, $_POST['email']);
-        $password = mysqli_real_escape_string($con, $_POST['password']);
+        $teacher_id = mysqli_real_escape_string($conn, $_POST['teacher_id']);
+        $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
+        $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+        $birthdate = mysqli_real_escape_string($conn, $_POST['birthdate']);
+        $city = mysqli_real_escape_string($conn, $_POST['city']);
+        $department = mysqli_real_escape_string($conn, $_POST['department']);
+        $contact = mysqli_real_escape_string($conn, $_POST['contact']);
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = mysqli_real_escape_string($conn, $_POST['password']);
 
             $sql = "SELECT password FROM teachers WHERE EMP = ? AND password = ?";
-                $stmt = $con->prepare($sql);
+                $stmt = $conn->prepare($sql);
                 $stmt->bind_param("ss", $teacher_id, $password);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -40,7 +42,7 @@ $notfound_err = $status = "";
                     $query = "UPDATE teachers SET full_name='$fullname', gender='$gender', birthdate='$birthdate', 
                                 city='$city', department='$department', contact='$contact', email='$email' 
                                 WHERE EMP='$teacher_id'";
-                    $query_run = mysqli_query($con, $query);
+                    $query_run = mysqli_query($conn, $query);
                     if($query_run) {
                         session_start();
                         $_SESSION['status'] = "Teacher updated successfully.";
@@ -77,13 +79,13 @@ $notfound_err = $status = "";
 
   <body>
       <div class="header">
-          <div class="container-fluid p-3">
-              <div class="d-flex align-items-center mb-3">
-                  <img src="logo.svg" alt="Logo" width="85">
-                  <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                  <a id="logout" href="logout.php">Logout</a>
+        <div class="container-fluid p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="logo.svg" alt="Logo" width="85">
+                    <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                    <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>
-              
+            </div>
           </div>
       </div>
             <!-- FORM -->
@@ -95,9 +97,9 @@ $notfound_err = $status = "";
                     </div>
                     <?php
                         if(isset($_GET['EMP'])) {
-                            $teacher_id = mysqli_real_escape_string($con, $_GET['EMP']);
+                            $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
                             $query = "SELECT * FROM teachers WHERE EMP='$teacher_id'";
-                            $query_run = mysqli_query($con, $query);
+                            $query_run = mysqli_query($conn, $query);
 
                             if(mysqli_num_rows($query_run) > 0) {
                                 $teacher = mysqli_fetch_array($query_run);

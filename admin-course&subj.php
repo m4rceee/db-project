@@ -1,4 +1,6 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
 $status1 = $status = $emptyField = "";
@@ -13,9 +15,9 @@ if (isset($_SESSION['status1'])) {
   unset($_SESSION['status1']);
 } 
 
-$con = mysqli_connect("localhost", "root", "", "courses_subj_db");
+//$con = mysqli_connect("localhost", "root", "", "courses_subj_db");
 
-if(!$con) {
+if(!$conn) {
   die("Connection Failed: ". mysqli_connect_error());
 }
 
@@ -38,8 +40,8 @@ if(isset($_POST['save_course_subj'])) {
     $subject = $_POST['subject'];
     $subjectCode = $_POST['code'];
 
-    $query = "SELECT * FROM courses_subj WHERE subj_name = ? AND subj_code = ?";
-    $stmt = mysqli_prepare($con, $query);
+    $query = "SELECT * FROM subjects WHERE subj_name = ? AND subj_code = ?";
+    $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "ss", $subject, $subjectCode);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -50,8 +52,8 @@ if(isset($_POST['save_course_subj'])) {
         header("Location: admin-course&subj.php");
         exit();
     } else {
-        $query = "INSERT INTO courses_subj (course, subj_name, subj_code) VALUES (?, ?, ?)";
-        $stmt = mysqli_prepare($con, $query);
+        $query = "INSERT INTO subjects (course, subj_name, subj_code) VALUES (?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "sss", $selectedCourse, $subject, $subjectCode);
         mysqli_stmt_execute($stmt);
 
@@ -94,11 +96,11 @@ if(isset($_POST['save_course_subj'])) {
         <div class="container-fluid p-3">
             <div class="d-flex align-items-center mb-3">
                 <img src="logo.svg" alt="Logo" width="85">
-                <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                <a id="logout" href="logout.php">Logout</a>
+                <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
               </div>
-            
         </div>
+        
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link" href="admin-teacher.php" id="nav-item1">Teacher</a>
@@ -170,8 +172,8 @@ if(isset($_POST['save_course_subj'])) {
                     <div class="card-title">
                         <h1>COURSES & SUBJECTS:</h1>
                     </div>
-                    <table class="table table-striped">
-                        <thead>
+                    <table class="table table-borderless table-striped table-hover">
+                        <thead class="table-success">
                           <tr>
                             <th>ID</th>
                             <th>Course</th>
@@ -182,8 +184,8 @@ if(isset($_POST['save_course_subj'])) {
                         </thead>
                         <tbody>
                           <?php
-                          $query = "SELECT * FROM courses_subj";
-                          $query_run = mysqli_query($con, $query);
+                          $query = "SELECT * FROM subjects";
+                          $query_run = mysqli_query($conn, $query);
 
                           if(mysqli_num_rows($query_run) > 0) {
                             foreach($query_run as $courses_subj) {
@@ -195,11 +197,11 @@ if(isset($_POST['save_course_subj'])) {
                                   <td><?= $courses_subj['subj_code']; ?></td>
                                   <td>
                                     <a href="subject-edit.php?subj_id=<?= $courses_subj['subj_id']; ?>" class="btn btn-sm">
-                                    <img src="edit.svg">
+                                    <img src="user-edit.svg">
                                     </a>
                                     <form action="subject-delete.php" method="POST" class="d-inline">
                                         <button type="submit" name="delete_course_subj" value="<?= $courses_subj['subj_id']; ?>" class="btn btn-sm">
-                                          <img src="delete.svg">
+                                          <img src="user-remove.svg">
                                         </button>
                                     </form> 
                                   </td> 

@@ -1,11 +1,5 @@
 <?php
-
-    $con = mysqli_connect("localhost", "root", "", "students_db");
-
-    if(!$con) {
-      die("Connection Failed: ". mysqli_connect_error());
-    }
-
+include("db_conn.php");
 ?>
 
 <!DOCTYPE html>
@@ -22,18 +16,18 @@
           @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
       </style>
       
-      <title>Teacher-Edit</title>
+      <title>Student View</title>
   </head>
 
   <body>
       <div class="header">
-          <div class="container-fluid p-3">
-              <div class="d-flex align-items-center mb-3">
-                  <img src="logo.svg" alt="Logo" width="85">
-                  <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                  <a id="logout" href="logout.php">Logout</a>
+        <div class="container-fluid p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="logo.svg" alt="Logo" width="85">
+                    <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                    <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>
-              
+            </div>
           </div>
       </div>
             <!-- FORM -->
@@ -44,9 +38,9 @@
                     </div>
                     <?php
                         if(isset($_GET['student_number'])) {
-                            $student_id = mysqli_real_escape_string($con, $_GET['student_number']);
+                            $student_id = mysqli_real_escape_string($conn, $_GET['student_number']);
                             $query = "SELECT * FROM students WHERE student_number='$student_id'";
-                            $query_run = mysqli_query($con, $query);
+                            $query_run = mysqli_query($conn, $query);
 
                             if(mysqli_num_rows($query_run) > 0) {
                                 $student = mysqli_fetch_array($query_run);

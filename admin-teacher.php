@@ -1,7 +1,9 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
-$status1 = $status = $emptyField = "";
+$status2 = $status1 = $status = $emptyField = "";
 
 if (isset($_SESSION['status'])) {
     $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
@@ -13,9 +15,14 @@ if (isset($_SESSION['status1'])) {
   unset($_SESSION['status1']);
 } 
 
-  $con = mysqli_connect("localhost", "root", "", "teachers_db");
+if (isset($_SESSION['status2'])) {
+  $status2 = "<div class='alert alert-danger alert-dismissible fade show mt-2'><strong>{$_SESSION['status2']}</strong></div>";
+  unset($_SESSION['status2']);
+} 
 
-  if(!$con) {
+  //$con = mysqli_connect("localhost", "root", "", "teachers_db");
+
+  if(!$conn) {
     die("Connection Failed: ". mysqli_connect_error());
   }
 
@@ -47,18 +54,18 @@ if (isset($_SESSION['status1'])) {
         return $password;
       }
 
-        $fullname = mysqli_real_escape_string($con, $_POST['fullname']);
-        $gender = mysqli_real_escape_string($con, $_POST['gender']);
-        $birthdate = mysqli_real_escape_string($con, $_POST['birthdate']);
-        $city = mysqli_real_escape_string($con, $_POST['city']);
-        $department = mysqli_real_escape_string($con, $_POST['department']);
-        $contact = mysqli_real_escape_string($con, $_POST['contact']);
-        $email = mysqli_real_escape_string($con, $_POST['email']);
+        $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
+        $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+        $birthdate = mysqli_real_escape_string($conn, $_POST['birthdate']);
+        $city = mysqli_real_escape_string($conn, $_POST['city']);
+        $department = mysqli_real_escape_string($conn, $_POST['department']);
+        $contact = mysqli_real_escape_string($conn, $_POST['contact']);
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
         $password = generateRandomPassword(8);
 
         // VALIDATION FOR EXISTING TEACHER
         $query = "SELECT email FROM teachers WHERE email = ?";
-          $stmt = mysqli_prepare($con, $query);
+          $stmt = mysqli_prepare($conn, $query);
           mysqli_stmt_bind_param($stmt, "s", $email);
           mysqli_stmt_execute($stmt);
           mysqli_stmt_store_result($stmt);
@@ -74,7 +81,7 @@ if (isset($_SESSION['status1'])) {
             $query = "INSERT INTO teachers (full_name, gender, birthdate, city, department, contact, email, password) 
                   VALUES ('$fullname', '$gender', '$birthdate', '$city', '$department', '$contact', '$email', '$password')";
             
-            $query_run = mysqli_query($con, $query);
+            $query_run = mysqli_query($conn, $query);
 
             if($query_run) {
               session_start();
@@ -115,8 +122,8 @@ if (isset($_SESSION['status1'])) {
           <div class="container-fluid p-3">
               <div class="d-flex align-items-center mb-3">
                   <img src="logo.svg" alt="Logo" width="85">
-                  <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                  <a id="logout" href="logout.php">Logout</a>
+                  <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                  <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>
               
           </div>
@@ -193,8 +200,8 @@ if (isset($_SESSION['status1'])) {
                       <div class="card-title">
                           <h1 style="color: #004500;">TEACHERS:</h1>
                       </div>
-                      <table class="table table-bordered table-striped">
-                          <thead>
+                      <table class="table table-borderless table-striped table-hover">
+                          <thead class="table-success">
                             <tr>
                               <th>EMP</th>
                               <th>Name</th>
@@ -206,7 +213,7 @@ if (isset($_SESSION['status1'])) {
                             <?php
 
                               $query = "SELECT * FROM teachers";
-                              $query_run = mysqli_query($con, $query);
+                              $query_run = mysqli_query($conn, $query);
 
                               if(mysqli_num_rows($query_run) > 0) {
                                 foreach($query_run as $teacher) {
@@ -217,14 +224,14 @@ if (isset($_SESSION['status1'])) {
                                       <td><?= $teacher['department']; ?></td>
                                       <td>
                                         <a href="teacher-view.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-sm">
-                                          <img src="info.svg">
+                                          <img src="view.svg">
                                         </a>
                                         <a href="teacher-edit.php?EMP=<?= $teacher['EMP']; ?>" class="btn btn-sm">
-                                          <img src="edit.svg">
+                                          <img src="user-edit.svg">
                                         </a>
                                         <form action="teacher-delete.php" method="POST" class="d-inline">
                                             <button type="submit" name="delete_teacher" value="<?= $teacher['EMP']; ?>" class="btn btn-sm">
-                                              <img src="delete.svg">
+                                              <img src="user-remove.svg">
                                             </button>
                                         </form> 
                                       </td> 

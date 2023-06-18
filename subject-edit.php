@@ -1,4 +1,6 @@
 <?php
+include("db_conn.php");
+
 session_start();
 
 if (isset($_SESSION['status'])) {
@@ -12,47 +14,16 @@ if (isset($_SESSION['status'])) {
 
 $notfound_err = $status = "";
 
-    $con = mysqli_connect("localhost", "root", "", "courses_subj_db");
-
-    if(!$con) {
-      die("Connection Failed: ". mysqli_connect_error());
-    }
-
     // UPDATE RECORD
     if(isset($_POST['subject_edit'])) {
-        $subject_id = mysqli_real_escape_string($con, $_POST['subject_id']);
-        $selectedCourse = mysqli_real_escape_string($con, $_POST['dropdown']);
-        $subject = mysqli_real_escape_string($con, $_POST['subject']);
-        $subjectCode = mysqli_real_escape_string($con, $_POST['code']);
+        $subject_id = mysqli_real_escape_string($conn, $_POST['subject_id']);
+        $selectedCourse = mysqli_real_escape_string($conn, $_POST['dropdown']);
+        $subject = mysqli_real_escape_string($conn, $_POST['subject']);
+        $subjectCode = mysqli_real_escape_string($conn, $_POST['code']);
 
-            /*$sql = "SELECT password FROM teachers WHERE EMP = ? AND password = ?";
-                $stmt = $con->prepare($sql);
-                $stmt->bind_param("ss", $teacher_id, $password);
-                $stmt->execute();
-                $result = $stmt->get_result();
-
-                if ($result->num_rows > 0) {
-                    $query = "UPDATE teachers SET full_name='$fullname', gender='$gender', birthdate='$birthdate', 
-                                city='$city', department='$department', contact='$contact', email='$email' 
-                                WHERE EMP='$teacher_id'";
-                    $query_run = mysqli_query($con, $query);
-                    if($query_run) {
-                        session_start();
-                        $_SESSION['status'] = "Teacher updated successfully.";
-                        header("Location: admin-teacher.php");
-                        exit();
-                      } else {
-                        session_start();
-                        $_SESSION['status'] = "Teacher update unsuccessful.";
-                        header("Location: admin-teacher.php");
-                        exit();
-                      }
-                } else {
-                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect password.</strong></div>";
-                }*/
-        $query = "UPDATE courses_subj SET course='$selectedCourse', subj_name='$subject', subj_code='$subjectCode'
+        $query = "UPDATE subjects SET course='$selectedCourse', subj_name='$subject', subj_code='$subjectCode'
                 WHERE subj_id='$subject_id'";
-        $query_run = mysqli_query($con, $query);
+        $query_run = mysqli_query($conn, $query);
 
         if($query_run) {
             session_start();
@@ -89,12 +60,13 @@ $notfound_err = $status = "";
 
   <body>
       <div class="header">
-          <div class="container-fluid p-3">
-              <div class="d-flex align-items-center mb-3">
-                  <img src="logo.svg" alt="Logo" width="85">
-                  <h1 class="title" style="font-size: 37px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                  <a id="logout" href="logout.php">Logout</a>
+        <div class="container-fluid p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="logo.svg" alt="Logo" width="85">
+                    <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+                    <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>
+            </div>
               
           </div>
       </div>
@@ -107,9 +79,9 @@ $notfound_err = $status = "";
                     </div>
                     <?php
                         if(isset($_GET['subj_id'])) {
-                            $subject_id = mysqli_real_escape_string($con, $_GET['subj_id']);
-                            $query = "SELECT * FROM courses_subj WHERE subj_id='$subject_id'";
-                            $query_run = mysqli_query($con, $query);
+                            $subject_id = mysqli_real_escape_string($conn, $_GET['subj_id']);
+                            $query = "SELECT * FROM subjects WHERE subj_id='$subject_id'";
+                            $query_run = mysqli_query($conn, $query);
 
                             if(mysqli_num_rows($query_run) > 0) {
                                 $subject = mysqli_fetch_array($query_run);

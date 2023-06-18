@@ -10,12 +10,7 @@ body {
 
 #header {
     background-image: linear-gradient(180deg, #018100, white);
-}
 
-.container-fluid {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .title {
@@ -25,7 +20,6 @@ body {
 }
 
 #logout {
-    margin-left: 150px;
     color: #004500;
 }
 
@@ -73,7 +67,7 @@ h1 {
 }
 
 #searchinput, #searchbtn {
-    height: auto;
+    height: 35px;
 }
 
 .card {

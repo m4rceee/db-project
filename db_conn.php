@@ -3,7 +3,7 @@
     $uname = "localhost";
     $unmae = "root";
     $password = "";
-    $db_name = "admin_db";
+    $db_name = "student_attendance_db";
 
     $conn = mysqli_connect($uname, $unmae, $password, $db_name);
 
