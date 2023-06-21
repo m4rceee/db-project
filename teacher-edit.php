@@ -14,12 +14,6 @@ if (isset($_SESSION['status'])) {
 
 $notfound_err = $status = "";
 
-    //$con = mysqli_connect("localhost", "root", "", "teachers_db");
-
-    if(!$conn) {
-      die("Connection Failed: ". mysqli_connect_error());
-    }
-
     // UPDATE RECORD
     if(isset($_POST['update_teacher'])) {
         $teacher_id = mysqli_real_escape_string($conn, $_POST['teacher_id']);

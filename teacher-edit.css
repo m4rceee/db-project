@@ -113,3 +113,8 @@ h1 {
     color:#004500;
     size: 15px;
 }
+
+/* Add custom styles for active button */
+.btn-group .btn.active {
+  background-color: #f8f9fa; /* Set your desired background color */
+}

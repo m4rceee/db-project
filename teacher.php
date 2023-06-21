@@ -79,7 +79,7 @@ if(isset($_POST['submit_student'])) {
   } else if (!empty($_POST['fullname']) && empty($_POST['subjectcode'])) {
     $subjcode_err = "<div class='alert alert-danger mt-2'><strong>Please enter a subject code.</strong></div>";
   } else if (empty($_POST['fullname']) && empty($_POST['subjectcode'])) {
-    $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
+    $both_err = "<div class='alert alert-danger mt-2'><strong>Missing fields!</strong></div>";
   }
 }
 ?>
@@ -126,9 +126,9 @@ if(isset($_POST['submit_student'])) {
                 <div class="card-header">
                   <div class="d-flex align-items-center mb-3">
                     <img src="user.svg">
-                    <h1 class="teachername" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;">Teacher Profile: <strong><?php echo $teacher['full_name'];?></strong>
+                    <h1 class="teachername mb-0" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;"><strong><!--<?php echo $teacher['full_name'];?>-->TEACHER PROFILE</strong>
                     </h1> 
-                    <a class="btn text-white ms-auto me-0" href="#" id="chgpass" style="font-size: 12px;">Change Password</a>
+                    <a class="btn text-white ms-auto me-0 w-17" href="#" id="chgpass" style="font-size: 12px;">Change Password</a>
                   </div>
                 </div>
 
@@ -159,6 +159,9 @@ if(isset($_POST['submit_student'])) {
           <div class="col-auto">
             <?php echo $status1; ?>
             <?php echo $status; ?>
+            <?php echo $both_err; ?>
+            <?php echo $fullname_err; ?>
+            <?php echo $subjcode_err; ?>
             <h1 style="color: #004500; margin-right: 20px;">Select a Student:</h1>
           </div>
           <div class="col">
@@ -178,16 +181,12 @@ if(isset($_POST['submit_student'])) {
                         <div>
                           <!--<label for="fullname" class="form-label">Student Name:</label>-->
                           <input type="text" class="form-control" id="fullname" placeholder="Enter student full name" name="fullname" autocomplete="off">
-                          <?php echo $both_err; ?> 
-                          <?php echo $fullname_err; ?> 
                         </div>
                       </div>
                       <div class="col">
                         <div>
                           <!--<label for="subjectcode" class="form-label">Subject Code:</label>-->
                           <input type="text" class="form-control" id="subjectcode" placeholder="Enter subject code" name="subjectcode" autocomplete="off">
-                          <?php echo $both_err; ?> 
-                          <?php echo $subjcode_err; ?> 
                         </div>
                       </div>
                     </div>
@@ -206,115 +205,183 @@ if(isset($_POST['submit_student'])) {
       </div>
 
       <div class="container mt-3">
-        <h1 style="color: #004500; margin-right: 20px;">Mark Attendance</h1>
-        <a href="#" class="chgpass btn btn-sm text-white mt-3 mb-2 me-0">Attendance Record</a>
-        <table class="table table-hover table-striped">
-          <thead class="table-success">
-            <tr>
-              <th>Student ID</th>
-              <th>Name</th>
-              <th>Year</th>
-              <th>Course</th>
-              <th>Subject</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <?php
-
-                $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
-                $query = "SELECT * FROM attendance WHERE teacher_id='$teacher_id'";
-                $query_run = mysqli_query($conn, $query);
-
-                if(mysqli_num_rows($query_run) > 0) {
-                  foreach($query_run as $student) {
-                    ?>
-                      <tr>
-                          <td><?= $student['student_number']; ?></td>
-                          <td><?= $student['full_name']; ?></td>
-                          <td><?= $student['year']; ?></td>
-                          <td><?= $student['course']; ?></td>
-                          <td><?= $student['subj_code']; ?></td>
-                          <td><?= $student['date']; ?></td>
-                          <td>
-                              <a href="#?>" class="btn btn-sm">
-                                  <img src="view.svg">
-                              </a>
-                              <a href="#" class="btn btn-sm">
-                                  <img src="user-edit.svg">
-                              </a>
-                              <form action="#" method="POST" class="d-inline">
-                                  <button type="submit" name="delete_teacher" value="#" class="btn btn-sm delete-row-btn">
-                                      <img src="user-remove.svg">
-                                  </button>
-                              </form>
-                          </td>
-                      </tr>
-                      <?php
-                  }
-              } else {
-                  echo "No student record/Subject found.";
-              }
-              ?>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Bootstrap modal
-      <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Teacher Registered!</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <p>Here are the credentials needed for logging in:</p>
-              <p>Email: <strong><span id="modalEmail"></span></strong></p>
-              <p>Password: <strong><span id="modalPassword"></span></strong></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #004500;">Close</button>
+        <div class="card">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <h1 class="text-white mb-0">Record Attendance</h1>
+              <div class="d-flex align-items-center">
+                <input type="text" id="search-input" class="form-control me-2" placeholder="Search">
+                <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #004500;">Search</button>
+              </div>
             </div>
           </div>
         </div>
-      </div> -->
+        <div class="card-body">
+          <table id="attendance-table" class="table table-hover table-striped">
+            <thead class="table-success">
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Year</th>
+                <th>Course</th>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <?php
+
+                  $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
+                  $query = "SELECT * FROM attendance WHERE teacher_id='$teacher_id'";
+                  $query_run = mysqli_query($conn, $query);
+
+                  if(mysqli_num_rows($query_run) > 0) {
+                    foreach($query_run as $student) {
+                      ?>
+                        <tr id="attendance-row-<?= $student['attendance_id'] ?>" data-attendance-id="<?= $student['attendance_id'] ?>">
+                            <td><?= $student['student_number']; ?></td>
+                            <td><?= $student['full_name']; ?></td>
+                            <td><?= $student['year']; ?></td>
+                            <td><?= $student['course']; ?></td>
+                            <td><?= $student['subj_code']; ?></td>
+                            <td><?= $student['date']; ?></td>
+                            <td class="status-cloumn">
+                              <?php if ($student['status'] === 'present') { ?>
+                                <img src="present.svg" alt="Present">
+                              <?php } elseif ($student['status'] === 'absent') { ?>
+                                <img src="absent.svg" alt="Absent">
+                              <?php } else { ?>
+                                <span class="status-icon"></span>
+                                <a href="#" class="btn present-btn">
+                                  <img src="present.svg">
+                                </a>
+                                <a href="#" class="btn absent-btn">
+                                  <img src="absent.svg">
+                                </a>
+                              <?php } ?>
+                            </td>
+                            <td>
+                                <a href="attendance-edit.php?attendance_id=<?= $student['attendance_id']; ?>&teacher_id=<?= $student['teacher_id']; ?>" class="btn btn-sm">
+                                    <img src="user-edit.svg">
+                                </a>
+                                <form action="#" method="POST" class="d-inline">
+                                    <button type="submit" name="delete_teacher" value="#" class="btn btn-sm delete-row-btn">
+                                        <img src="user-remove.svg">
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                } else {
+                    echo "No student record/Subject found.";
+                }
+                ?>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <!-- script -->
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
       <script>
+        // Function to handle button clicks
+        function handleButtonClick(attendanceId, status) {
+          // Create a new XMLHttpRequest object
+          var xhr = new XMLHttpRequest();
+        
+          // Prepare the request
+          xhr.open("POST", "update_attendance.php", true);
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        
+          // Define the data to be sent to the server
+          var data = "attendance_id=" + encodeURIComponent(attendanceId) + "&status=" + encodeURIComponent(status);
+        
+          // Send the request
+          xhr.send(data);
+        
+          // Handle the response from the server
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              // Response received, update the status column
+              var statusColumn = document.querySelector("#attendance-row-" + attendanceId + " .status-icon");
+              if (status === "present") {
+                statusColumn.innerHTML = '<img src="present.svg" alt="Present">';
+              } else if (status === "absent") {
+                statusColumn.innerHTML = '<img src="absent.svg" alt="Absent">';
+              }
 
-        // Get the EMP value from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const empValue = urlParams.get('EMP');
+              //Remove the buttons
+              var presentButton = document.querySelector("#attendance-row-" + attendanceId + " .present-btn");
+              var absentButton = document.querySelector("#attendance-row-" + attendanceId + " .absent-btn");
+              presentButton.remove();
+              absentButton.remove();
 
-        // Set the form action dynamically
-        const form = document.getElementById('teacher-form');
-        form.action = `teacher.php?EMP=${empValue}`;
-
-        /* When the document is ready
-        $(document).ready(function() {
-          // If the registration was successful, show the modal
-          <?php if (isset($_GET['success']) && $_GET['success'] == 'true') { ?>
-            $('#myModal').modal('show');
-            var email = "<?php echo $_GET['email']; ?>";
-            var password = "<?php echo $_GET['password']; ?>";
-            $('#modalEmail').text(email);
-            $('#modalPassword').text(password);
-          <?php } ?>
-        });
-
-        /*$(document).ready(function() {
-          $('.delete-row-btn').click(function() {
-            $(this).closest('tr').remove();
+              /* Remove the row from the table
+              var attendanceRow = document.querySelector("#attendance-row-" + attendanceId);
+              attendanceRow.remove();*/
+            }
+          };
+        }
+        
+        // Add event listeners to the present and absent buttons
+        var presentButtons = document.getElementsByClassName("present-btn");
+        for (var i = 0; i < presentButtons.length; i++) {
+          presentButtons[i].addEventListener("click", function(e) {
+            e.preventDefault();
+            var attendanceId = this.closest("tr").getAttribute("data-attendance-id");
+            handleButtonClick(attendanceId, "present");
           });
-        });*/
+        }
+        
+        var absentButtons = document.getElementsByClassName("absent-btn");
+        for (var i = 0; i < absentButtons.length; i++) {
+          absentButtons[i].addEventListener("click", function(e) {
+            e.preventDefault();
+            var attendanceId = this.closest("tr").getAttribute("data-attendance-id");
+            handleButtonClick(attendanceId, "absent");
+          });
+        }
+
+        // Function to handle search button click
+        function fetchSearchResults() {
+          // Get the search input value
+          var searchInput = document.getElementById("search-input").value;
+
+          // Get the EMP parameter value
+          var empParameter = "<?php echo $_GET['EMP']; ?>";
+
+          // Create a new XMLHttpRequest object
+          var xhr = new XMLHttpRequest();
+
+          // Prepare the request
+          xhr.open("GET", "search_attendance.php?search=" + encodeURIComponent(searchInput) + "&EMP=" + encodeURIComponent(empParameter), true);
+
+          // Send the request
+          xhr.send();
+
+          // Handle the response from the server
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              // Response received, update the table with search results
+              var table = document.getElementById("attendance-table");
+              table.innerHTML = xhr.responseText;
+            }
+          };
+        }
+
+        // Add event listener to the search button
+        var searchButton = document.getElementById("search-button");
+        searchButton.addEventListener("click", function(e) {
+          e.preventDefault();
+          fetchSearchResults();
+        });
 
       </script>
     </body>
