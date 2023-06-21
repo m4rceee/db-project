@@ -3,13 +3,13 @@ include("db_conn.php");
 
 // Retrieve the search query from the URL parameter
 $searchQuery = $_GET['search'];
-$emp = $_GET['EMP'];
+$studentNumber = $_GET['student_number'];
 
 if (!empty($searchQuery)) { 
 
     // Perform the database query to fetch the search results
     // Modify the query based on your table structure and search logic
-    $query = "SELECT * FROM attendance WHERE teacher_id='$emp' AND (full_name LIKE '%$searchQuery%'
+    $query = "SELECT * FROM attendance WHERE student_number='$studentNumber' AND (full_name LIKE '%$searchQuery%'
             OR student_number LIKE '%$searchQuery%'
             OR year LIKE '%$searchQuery%'
             OR course LIKE '%$searchQuery%'
@@ -31,7 +31,7 @@ if (!empty($searchQuery)) {
                     <th>Subject</th>
                     <th>Date</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <!--<th>Action</th>-->
                 </tr>
             </thead>
             <tbody>
@@ -53,15 +53,10 @@ if (!empty($searchQuery)) {
                             <img src="absent.svg" alt="Absent">
                             <?php } else { ?>
                                     <span class="status-icon"></span>
-                                    <a href="#" class="btn present-btn">
-                                        <img src="present.svg">
-                                    </a>
-                                    <a href="#" class="btn absent-btn">
-                                        <img src="absent.svg">
-                                    </a>
+                                    <img src="no-attendance.svg" alt="Status">
                     <?php } ?>
                 </td>
-                <td>
+                <!--<td>
                     <a href="attendance-edit.php?attendance_id=<?= $student['attendance_id']; ?>&teacher_id=<?= $student['teacher_id']; ?>" class="btn btn-sm">
                     <img src="user-edit.svg">
                     </a>
@@ -70,7 +65,7 @@ if (!empty($searchQuery)) {
                         <img src="user-remove.svg">
                     </button>
                     </form>
-                </td>
+                </td>-->
                 </tr>
             </tbody>
         </table>
@@ -81,8 +76,8 @@ if (!empty($searchQuery)) {
         }        
 } else {
     // Fetch all records from the attendance table
-    $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
-    $query = "SELECT * FROM attendance WHERE teacher_id='$teacher_id' ORDER BY date DESC";
+    $studentNumber = mysqli_real_escape_string($conn, $_GET['student_number']);
+    $query = "SELECT * FROM attendance WHERE student_number='$studentNumber' ORDER BY date DESC";
     $query_run = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($query_run) > 0) {
@@ -113,18 +108,13 @@ if (!empty($searchQuery)) {
                 <td><?= $student['date']; ?></td>
                 <td class="status-cloumn">
                     <?php if ($student['status'] === 'present') { ?>
-                        <img src="present.svg" alt="Present">
-                    <?php } elseif ($student['status'] === 'absent') { ?>
-                        <img src="absent.svg" alt="Absent">
-                    <?php } else { ?>
-                        <span class="status-icon"></span>
-                        <a href="#" class="btn present-btn">
-                            <img src="present.svg">
-                        </a>
-                        <a href="#" class="btn absent-btn">
-                            <img src="absent.svg">
-                        </a>
-                    <?php } ?>
+                                <img src="present.svg" alt="Present">
+                                <?php } elseif ($student['status'] === 'absent') { ?>
+                                <img src="absent.svg" alt="Absent">
+                                <?php } else { ?>
+                                        <span class="status-icon"></span>
+                                        <img src="no-attendance.svg" alt="Status">
+                        <?php } ?>
                 </td>
                 <td>
                     <a href="attendance-edit.php?attendance_id=<?= $student['attendance_id']; ?>&teacher_id=<?= $student['teacher_id']; ?>" class="btn btn-sm">

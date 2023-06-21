@@ -1,7 +1,7 @@
 <?php
 include("db_conn.php");
 
-session_start();
+/*session_start();
 
 $fullname_err = $subjcode_err = $status1 = $status = $both_err = $emptyField = "";
 
@@ -81,7 +81,7 @@ if(isset($_POST['submit_student'])) {
   } else if (empty($_POST['fullname']) && empty($_POST['subjectcode'])) {
     $both_err = "<div class='alert alert-danger mt-2'><strong>Missing fields!</strong></div>";
   }
-}
+}*/
 ?>
 
 <!DOCTYPE html>
@@ -98,7 +98,7 @@ if(isset($_POST['submit_student'])) {
           @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
       </style>
       
-      <title>Teacher</title>
+      <title>Student</title>
   </head>
 
   <body>
@@ -114,19 +114,19 @@ if(isset($_POST['submit_student'])) {
 
       <div class="container">
         <?php
-          if(isset($_GET['EMP'])) {
-          $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
-          $query = "SELECT * FROM teachers WHERE EMP='$teacher_id'";
+          if(isset($_GET['student_number'])) {
+          $studentNumber = mysqli_real_escape_string($conn, $_GET['student_number']);
+          $query = "SELECT * FROM students WHERE student_number='$studentNumber'";
           $query_run = mysqli_query($conn, $query);
 
             if(mysqli_num_rows($query_run) > 0) {
-              $teacher = mysqli_fetch_array($query_run);
+              $student = mysqli_fetch_array($query_run);
               ?>
               <div class="card">
                 <div class="card-header">
                   <div class="d-flex align-items-center mb-3">
                     <img src="user.svg">
-                    <h1 class="teachername mb-0" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;"><strong><!--<?php echo $teacher['full_name'];?>-->TEACHER PROFILE</strong>
+                    <h1 class="teachername mb-0" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;"><strong><!--<?php echo $student['full_name'];?>-->STUDENT PROFILE</strong>
                     </h1> 
                     <a class="btn text-white ms-auto me-0 w-17" href="#" id="chgpass" style="font-size: 12px;">Change Password</a>
                   </div>
@@ -135,15 +135,17 @@ if(isset($_POST['submit_student'])) {
                 <div class="card-body">
                   <div class="p-container">
                     <div class="line1">
-                      <p>Full name: <span style="text-decoration: underline;"><?php echo $teacher['full_name'];?></span></p>
-                      <p>Gender: <span style="text-decoration: underline;"><?php echo $teacher['gender'];?></span></p>
-                      <p>Date of Birth: <span style="text-decoration: underline;"><?php echo $teacher['birthdate'];?></span></p>
-                      <p>City: <span style="text-decoration: underline;"><?php echo $teacher['city'];?></span></p>
+                      <p>Full name: <span style="text-decoration: underline;"><?php echo $student['full_name'];?></span></p>
+                      <p>Gender: <span style="text-decoration: underline;"><?php echo $student['gender'];?></span></p>
+                      <p>Date of Birth: <span style="text-decoration: underline;"><?php echo $student['birthdate'];?></span></p>
+                      <p>City: <span style="text-decoration: underline;"><?php echo $student['city'];?></span></p>
                     </div>
                     <div class="line2">
-                      <p>Department: <span style="text-decoration: underline;"><?php echo $teacher['department'];?></span></p>
-                      <p>Contact Number: <span style="text-decoration: underline;"><?php echo $teacher['contact'];?></span></p>
-                      <p>E-mail: <span style="text-decoration: underline;"><?php echo $teacher['email'];?></span></p>
+                      <p>Student Number: <span style="text-decoration: underline;"><?php echo $student['student_number'];?></span></p>
+                      <p>Year: <span style="text-decoration: underline;"><?php echo $student['year'];?></span></p>
+                      <p>Course: <span style="text-decoration: underline;"><?php echo $student['course'];?></span></p>
+                      <p>Contact Number: <span style="text-decoration: underline;"><?php echo $student['contact'];?></span></p>
+                      <p>E-mail: <span style="text-decoration: underline;"><?php echo $student['email'];?></span></p>
                     </div>
                   </div>
                 </div>
@@ -155,7 +157,7 @@ if(isset($_POST['submit_student'])) {
         ?>
       </div> 
       
-      <div class="container mt-3">
+      <!--<div class="container mt-3">
           <div class="col-auto">
             <?php echo $status1; ?>
             <?php echo $status; ?>
@@ -179,13 +181,13 @@ if(isset($_POST['submit_student'])) {
                     <div class="row">
                       <div class="col">
                         <div>
-                          <!--<label for="fullname" class="form-label">Student Name:</label>-->
+                          <label for="fullname" class="form-label">Student Name:</label
                           <input type="text" class="form-control" id="fullname" placeholder="Enter student full name" name="fullname" autocomplete="off">
                         </div>
                       </div>
                       <div class="col">
                         <div>
-                          <!--<label for="subjectcode" class="form-label">Subject Code:</label>-->
+                          <label for="subjectcode" class="form-label">Subject Code:</label>
                           <input type="text" class="form-control" id="subjectcode" placeholder="Enter subject code" name="subjectcode" autocomplete="off">
                         </div>
                       </div>
@@ -202,13 +204,13 @@ if(isset($_POST['submit_student'])) {
             }
             ?>
           </div>
-      </div>
+      </div>-->
 
       <div class="container mt-3">
         <div class="card">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
-              <h1 class="text-white mb-0">Record Attendance</h1>
+              <h1 class="text-white mb-0">Attendance Record</h1>
               <div class="d-flex align-items-center">
                 <input type="text" id="search-input" class="form-control me-2" placeholder="Search">
                 <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #004500;">Search</button>
@@ -227,15 +229,15 @@ if(isset($_POST['submit_student'])) {
                 <th>Subject</th>
                 <th>Date</th>
                 <th>Status</th>
-                <th>Action</th>
+                <!--<th>Action</th>-->
               </tr>
             </thead>
             <tbody>
               <tr>
                 <?php
 
-                  $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
-                  $query = "SELECT * FROM attendance WHERE teacher_id='$teacher_id' ORDER BY date DESC";
+                  $studentNumber = mysqli_real_escape_string($conn, $_GET['student_number']);
+                  $query = "SELECT * FROM attendance WHERE student_number='$studentNumber' ORDER BY date DESC";
                   $query_run = mysqli_query($conn, $query);
 
                   if(mysqli_num_rows($query_run) > 0) {
@@ -255,30 +257,24 @@ if(isset($_POST['submit_student'])) {
                                 <img src="absent.svg" alt="Absent">
                               <?php } else { ?>
                                 <span class="status-icon"></span>
-                                <a href="#" class="btn present-btn">
-                                  <img src="present.svg">
-                                </a>
-                                <a href="#" class="btn absent-btn">
-                                  <img src="absent.svg">
-                                </a>
+                                  <img src="no-attendance.svg" alt="Status">
                               <?php } ?>
                             </td>
-                            <td>
+                            <!--<td>
                                 <a href="attendance-edit.php?attendance_id=<?= $student['attendance_id']; ?>&teacher_id=<?= $student['teacher_id']; ?>" class="btn btn-sm">
                                     <img src="user-edit.svg">
                                 </a>
-                                <form action="record-delete.php" method="POST" class="d-inline">
-                                <input type="hidden" name="teacherId" value="<?= $student['teacher_id']; ?>">
-                                    <button type="submit" name="delete_record" value="<?= $student['attendance_id']; ?>" class="btn btn-sm delete-row-btn">
+                                <form action="#" method="POST" class="d-inline">
+                                    <button type="submit" name="delete_teacher" value="#" class="btn btn-sm delete-row-btn">
                                         <img src="user-remove.svg">
                                     </button>
                                 </form>
-                            </td>
+                            </td>-->
                         </tr>
                         <?php
                     }
                 } else {
-                    echo "No student record/Subject found.";
+                    echo "No student record found.";
                 }
                 ?>
               </tr>
@@ -292,7 +288,7 @@ if(isset($_POST['submit_student'])) {
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
       <script>
-        // Function to handle button clicks
+        /* Function to handle button clicks
         function handleButtonClick(attendanceId, status) {
           // Create a new XMLHttpRequest object
           var xhr = new XMLHttpRequest();
@@ -318,15 +314,15 @@ if(isset($_POST['submit_student'])) {
                 statusColumn.innerHTML = '<img src="absent.svg" alt="Absent">';
               }
 
-              //Remove the buttons
+              Remove the buttons
               var presentButton = document.querySelector("#attendance-row-" + attendanceId + " .present-btn");
               var absentButton = document.querySelector("#attendance-row-" + attendanceId + " .absent-btn");
               presentButton.remove();
               absentButton.remove();
 
-              /* Remove the row from the table
+              Remove the row from the table
               var attendanceRow = document.querySelector("#attendance-row-" + attendanceId);
-              attendanceRow.remove();*/
+              attendanceRow.remove();
             }
           };
         }
@@ -348,7 +344,7 @@ if(isset($_POST['submit_student'])) {
             var attendanceId = this.closest("tr").getAttribute("data-attendance-id");
             handleButtonClick(attendanceId, "absent");
           });
-        }
+        }*/
 
         // Function to handle search button click
         function fetchSearchResults() {
@@ -356,13 +352,13 @@ if(isset($_POST['submit_student'])) {
           var searchInput = document.getElementById("search-input").value;
 
           // Get the EMP parameter value
-          var empParameter = "<?php echo $_GET['EMP']; ?>";
+          var empParameter = "<?php echo $_GET['student_number']; ?>";
 
           // Create a new XMLHttpRequest object
           var xhr = new XMLHttpRequest();
 
           // Prepare the request
-          xhr.open("GET", "search_attendance.php?search=" + encodeURIComponent(searchInput) + "&EMP=" + encodeURIComponent(empParameter), true);
+          xhr.open("GET", "search_attendance_student.php?search=" + encodeURIComponent(searchInput) + "&student_number=" + encodeURIComponent(empParameter), true);
 
           // Send the request
           xhr.send();
