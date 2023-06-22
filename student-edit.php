@@ -3,6 +3,11 @@ include("db_conn.php");
 
 session_start();
 
+if (isset($_SESSION['notfound_err'])) {
+    $notfound_err = $_SESSION['notfound_err'];
+    unset($_SESSION['notfound_err']); // Clear the session variable
+}
+
 if (isset($_SESSION['status'])) {
     $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
     unset($_SESSION['status']);
@@ -12,19 +17,7 @@ if (isset($_SESSION['status'])) {
   unset($_SESSION['status']);
 } 
 
-$notfound_err = $status = "";
-
-    /*$con = mysqli_connect("localhost", "root", "", "students_db");
-
-    if(!$con) {
-      die("Connection Failed: ". mysqli_connect_error());
-    }
-
-    $con2 = mysqli_connect("localhost", "root", "", "courses_subj_db");
-
-    if(!$con2) {
-    die("Connection Failed: ". mysqli_connect_error());
-    }*/
+$status = "";
     
     // Fetch the dropdown options from the database
     $query = "SELECT DISTINCT course FROM subjects";
@@ -38,6 +31,25 @@ $notfound_err = $status = "";
 
     // UPDATE RECORD
     if(isset($_POST['update_student'])) {
+        
+        $fieldsToValidate = array('fullname', 'gender', 'birthdate', 'city', 'dropdown', 'contact',
+                                    'email', 'password');
+        $allFieldsNotEmpty = true;
+
+        // VALIDATION FOR EMPTY FIELDS
+        foreach ($fieldsToValidate as $field) {
+            if (empty($_POST[$field])) {
+                $allFieldsNotEmpty = false;
+                session_start();
+                $_SESSION['notfound_err'] = "Missing field/s.";
+                header("Location: student-edit.php?student_number=" . $_POST['student_id']);
+                exit();
+                break;
+            }
+        }
+    
+    if ($allFieldsNotEmpty) { 
+
         $student_id = mysqli_real_escape_string($conn, $_POST['student_id']);
         $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
         $gender = mysqli_real_escape_string($conn, $_POST['gender']);
@@ -72,8 +84,14 @@ $notfound_err = $status = "";
                         exit();
                       }
                 } else {
-                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect password.</strong></div>";
+                    session_start();
+                    $_SESSION['notfound_err'] = "Incorrect password.";
+                    header("Location: student-edit.php?student_number=" . $student_id);
+                    exit();
                 }
+    }
+
+        
     }
 ?>
 
@@ -111,7 +129,9 @@ $notfound_err = $status = "";
                   <div class="card-body">
                     <div class="card-title">
                             <h1>EDIT STUDENT:</h1>
-                            <?php echo $notfound_err; ?>
+                            <?php if (isset($notfound_err)) {
+                                echo '<div class="alert alert-danger mt-2"><strong>' . $notfound_err . '</strong></div>';
+                            } ?>
                     </div>
                     <?php
                         if(isset($_GET['student_number'])) {
@@ -159,7 +179,7 @@ $notfound_err = $status = "";
                                             <div class="form- mb-3">
                                                 <label for="dropdown" style="color: #fff; margin-bottom: 7px;">Course:</label>
                                                 <select class="form-select" id="dropdown" name="dropdown">
-                                                <option selected disabled><?php echo $student['course']; ?></option> 
+                                                <option selected ><?php echo $student['course']; ?></option> 
                                                 <?php foreach ($options as $option): ?>
                                                     <option value="<?php echo $option; ?>"><?php echo $option; ?></option>
                                                 <?php endforeach; ?>

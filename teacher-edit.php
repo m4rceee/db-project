@@ -3,6 +3,11 @@ include("db_conn.php");
 
 session_start();
 
+if (isset($_SESSION['notfound_err'])) {
+    $notfound_err = $_SESSION['notfound_err'];
+    unset($_SESSION['notfound_err']); // Clear the session variable
+}
+
 if (isset($_SESSION['status'])) {
     $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
     unset($_SESSION['status']);
@@ -12,10 +17,28 @@ if (isset($_SESSION['status'])) {
   unset($_SESSION['status']);
 } 
 
-$notfound_err = $status = "";
+$emptyFields = $status = "";
 
     // UPDATE RECORD
     if(isset($_POST['update_teacher'])) {
+
+        $fieldsToValidate = array('fullname', 'gender', 'birthdate', 'city', 'department', 'contact',
+                                    'email', 'password');
+        $allFieldsNotEmpty = true;
+
+        // VALIDATION FOR EMPTY FIELDS
+        foreach ($fieldsToValidate as $field) {
+            if (empty($_POST[$field])) {
+                $allFieldsNotEmpty = false;
+                session_start();
+                $_SESSION['notfound_err'] = "Missing field/s.";
+                header("Location: teacher-edit.php?EMP=" . $_POST['teacher_id']);
+                exit();
+                break;
+            }
+        }
+    
+    if ($allFieldsNotEmpty) { 
         $teacher_id = mysqli_real_escape_string($conn, $_POST['teacher_id']);
         $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
         $gender = mysqli_real_escape_string($conn, $_POST['gender']);
@@ -49,8 +72,13 @@ $notfound_err = $status = "";
                         exit();
                       }
                 } else {
-                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect password.</strong></div>";
+                    session_start();
+                    $_SESSION['notfound_err'] = "Incorrect password.";
+                    header("Location: teacher-edit.php?EMP=" . $teacher_id);
+                    exit();
                 }
+    }
+        
     }
 ?>
 
@@ -87,7 +115,9 @@ $notfound_err = $status = "";
                   <div class="card-body">
                     <div class="card-title">
                             <h1>EDIT TEACHER:</h1>
-                            <?php echo $notfound_err; ?>
+                            <?php if (isset($notfound_err)) {
+                                echo '<div class="alert alert-danger mt-2"><strong>' . $notfound_err . '</strong></div>';
+                            } ?>
                     </div>
                     <?php
                         if(isset($_GET['EMP'])) {
