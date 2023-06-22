@@ -1,6 +1,15 @@
 <?php
 include("db_conn.php");
 
+session_start();
+
+$status3 = "";
+
+if (isset($_SESSION['status3'])) {
+  $status3 = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status3']}</strong></div>";
+  unset($_SESSION['status3']);
+} 
+
 /*session_start();
 
 $fullname_err = $subjcode_err = $status1 = $status = $both_err = $emptyField = "";
@@ -122,13 +131,14 @@ if(isset($_POST['submit_student'])) {
             if(mysqli_num_rows($query_run) > 0) {
               $student = mysqli_fetch_array($query_run);
               ?>
+              <?php echo $status3; ?>
               <div class="card">
                 <div class="card-header">
                   <div class="d-flex align-items-center mb-3">
                     <img src="user.svg">
                     <h1 class="teachername mb-0" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;"><strong><!--<?php echo $student['full_name'];?>-->STUDENT PROFILE</strong>
                     </h1> 
-                    <a class="btn text-white ms-auto me-0 w-17" href="#" id="chgpass" style="font-size: 12px;">Change Password</a>
+                    <a class="btn text-white ms-auto me-0 w-17" href="change_password_student.php?student_number=<?= $studentNumber; ?>" id="chgpass" style="font-size: 12px;">Change Password</a>
                   </div>
                 </div>
 

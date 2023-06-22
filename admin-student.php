@@ -204,8 +204,8 @@ if (isset($_SESSION['status1'])) {
                           </div>
 
                           <div class="mb-3">
-                            <label for="year" class="form-label">Year:</label>
-                            <input type="number" class="form-control" id="year" placeholder="Enter year" name="year" autocomplete="off">
+                            <label for="year" class="form-label">Year & Section:</label>
+                            <input type="text" class="form-control" id="year" placeholder="Enter year & section" name="year" autocomplete="off">
                           </div>
 
                           <div class="form- mb-3">
@@ -250,7 +250,7 @@ if (isset($_SESSION['status1'])) {
                           <tr>
                             <th>Student Number</th>
                             <th>Name</th>
-                            <th>Year</th>
+                            <th>Year & Section</th>
                             <th>Course</th>
                             <th>Action</th>
                           </tr>

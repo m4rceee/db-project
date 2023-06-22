@@ -66,7 +66,7 @@
               <tr>
                 <th>Student ID</th>
                 <th>Name</th>
-                <th>Year</th>
+                <th>Year & Section</th>
                 <th>Course</th>
                 <th>Subject</th>
                 <th>Date</th>

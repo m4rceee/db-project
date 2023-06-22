@@ -152,8 +152,8 @@ $notfound_err = $status = "";
                                             </div>
 
                                             <div class="mb-3">
-                                                <label for="year" class="form-label">Year:</label>
-                                                <input type="number" class="form-control" value="<?=$student['year'];?>" id="year" placeholder="Enter year" name="year" autocomplete="off">
+                                                <label for="year" class="form-label">Year & Section:</label>
+                                                <input type="text" class="form-control" value="<?=$student['year'];?>" id="year" placeholder="Enter year" name="year" autocomplete="off">
                                             </div>
 
                                             <div class="form- mb-3">
