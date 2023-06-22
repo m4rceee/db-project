@@ -1,12 +1,12 @@
 <?php
 
-$both_err = $notfound_err = $studentNumber_err = $password_err="";
+$updateSuccess = $both_err = $notfound_err = $email_err = $password_err="";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        if(!empty($_POST['studentNumber']) && !empty($_POST['pswd'])) {
+        if(!empty($_POST['studentNumber']) && !empty($_POST['newPass'])) {
             $studentNumber = $_POST['studentNumber'];
-            $pswd = $_POST['pswd'];
+            $newPass = $_POST['newPass'];
 
             $mysqli = new mysqli("localhost", "root", "", "student_attendance_db");
 
@@ -15,26 +15,30 @@ $both_err = $notfound_err = $studentNumber_err = $password_err="";
                 $error_message = $mysqli->connect_error;
                 echo "The connection to the database failed with error code $error_code and error message $error_message";
             } else {
-                $sql = "SELECT * FROM students WHERE student_number = ? AND password = ?";
+                $sql = "SELECT * FROM students WHERE student_number = ?";
                 $stmt = $mysqli->prepare($sql);
-                $stmt->bind_param("ss", $studentNumber, $pswd);
+                $stmt->bind_param("s", $studentNumber);
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if ($result->num_rows > 0) {
-                    $student = $result->fetch_assoc();
-                    header("Location: student.php?student_number={$student['student_number']}");
+                    $sql = "UPDATE students SET password = ? WHERE student_number = ?";
+                    $stmt = $mysqli->prepare($sql);
+                    $stmt->bind_param("ss", $newPass, $studentNumber);
+                    $stmt->execute();
+                    $updateSuccess = "<div class='alert alert-success mt-2'><strong>Password changed.</strong></div>";
+                    header("Location: student-login.php");
                     exit();
                 } else {
-                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect student number or password.</strong></div>";
+                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect student number.</strong></div>";
                 }
             }
-        } else if(empty($_POST['studentNumber']) && !empty($_POST['pswd'])) {
-            $studentNumber_err = "<div class='alert alert-danger mt-2'><strong>Please enter an e-mail.<strong></div>";
+        } else if(empty($_POST['studentNumber']) && !empty($_POST['newPass'])) {
+            $email_err = "<div class='alert alert-danger mt-2'><strong>Please enter a student number.<strong></div>";
         } 
-        else if(empty($_POST['pswd']) && !empty($_POST['studentNumber'])) {
+        else if(empty($_POST['newPass']) && !empty($_POST['studentNumber'])) {
             $password_err = "<div class='alert alert-danger mt-2'><strong>Please enter a password.</strong></div>";
         }
-        else if(empty($_POST['studentNumber']) && empty($_POST['pswd'])) {
+        else if(empty($_POST['studentNumber']) && empty($_POST['newPass'])) {
             $both_err = "<div class='alert alert-danger mt-2'><strong>This is a required field!</strong></div>";
         } 
     } 
@@ -55,7 +59,7 @@ $both_err = $notfound_err = $studentNumber_err = $password_err="";
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
     </style>
     
-    <title>Student Log In Page</title>
+    <title>Teacher Forgot Password Page</title>
 </head>
 
 <body>
@@ -71,21 +75,21 @@ $both_err = $notfound_err = $studentNumber_err = $password_err="";
     <div class="cn-1 container">
         <div class="card mx-auto">
             <div class="card-body">
-                <form action="student-login.php" method="POST">
+                <form action="student-forgot-password.php" method="POST">
                     <div class="card-title text-center mt-3 mb-2">
-                        <h5 class="adminlogin">Student Log In</h5>
+                        <h5 class="adminlogin">Forgot Password?</h5>
                         <?php echo $notfound_err; ?>
                     </div>
                     <div class="mb-3 mt-3">
                       <label for="studentNumber" class="form-label"><strong>Student Number:</strong></label>
                       <input type="text" class="form-control" id="studentNumber" placeholder="Enter student number" name="studentNumber" autocomplete="off">
-                        <?php echo $studentNumber_err; ?>
+                        <?php echo $email_err; ?>
                         <?php echo $both_err; ?>
                     </div>
                     <div class="mb-4">
-                      <label for="pwd" class="form-label"><strong>Password:</strong></label>
+                      <label for="newPass" class="form-label"><strong>New Password:</strong></label>
                       <div class="input-group">
-                            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" autocomplete="off">
+                            <input type="password" class="form-control" id="newPass" placeholder="Enter new password" name="newPass" autocomplete="off">
                             <div class="input-group-text">
                                 <button class="btn" type="button" id="eye">
                                     <img src="eye-slash.svg">
@@ -94,23 +98,20 @@ $both_err = $notfound_err = $studentNumber_err = $password_err="";
                       </div>
                       <?php echo $password_err; ?>
                         <?php echo $both_err; ?>
-                        <div class="mt-2">
-                        <a href="student-forgot-password.php" style="color: #004500; margin-left: 3px;" id="forgotPass">Forgot Password?</a>
-                    </div>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" id="admnsbmt" class="btn btn-primary">Log In</button>
+                        <button type="submit" id="admnsbmt" class="btn btn-primary">Submit</button>
                     </div>
                   </form>
             </div>
         </div>
     </div>
-    <a class="homebtn btn btn-floating text-white" href="home.php" role="button" id="homebtn">Back</a>
+    <a class="homebtn btn btn-floating text-white" href="teacher-login.php" role="button" id="homebtn">Back</a>
 
     <!-- script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script>
-        const password = document.getElementById("pwd");
+        const password = document.getElementById("newPass");
         const eye = document.getElementById("eye");
         eye.classList.add("custom-eye-icon");
 

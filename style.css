@@ -130,3 +130,12 @@ body {
 .homebtn:hover, #admnsbmt:hover {
     background-color: #004500;
 }
+
+#forgotPass {
+    color:#004500;
+    transition-duration: 0.4s;
+}
+
+#forgotPass:hover {
+    color:#018100;
+}

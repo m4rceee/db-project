@@ -129,7 +129,7 @@ $status2 = $status1 = $status = $emptyFields =  $incorrectPass = $status3 = $not
                                 $teacher = mysqli_fetch_array($query_run);
                                 ?>
                                     <form action="change_password_teacher.php?EMP=<?php echo $teacher_id; ?>" method="POST">
-                                        <input type="text" name="teacher_id" value="<?= $teacher_id?>">
+                                        <input type="hidden" name="teacher_id" value="<?= $teacher_id?>">
 
                                         <div class="mb-3">
                                             <label for="current_password" class="form-label">Current Password:</label>

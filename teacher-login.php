@@ -1,6 +1,6 @@
 <?php
 
-$both_err = $notfound_err = $email_err = $password_err="";
+$updateSuccess = $both_err = $notfound_err = $email_err = $password_err="";
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -73,6 +73,7 @@ $both_err = $notfound_err = $email_err = $password_err="";
             <div class="card-body">
                 <form action="teacher-login.php" method="POST">
                     <div class="card-title text-center mt-3 mb-2">
+                        <?php echo $updateSuccess; ?>
                         <h5 class="adminlogin">Teacher Log In</h5>
                         <?php echo $notfound_err; ?>
                     </div>
@@ -94,6 +95,9 @@ $both_err = $notfound_err = $email_err = $password_err="";
                       </div>
                       <?php echo $password_err; ?>
                         <?php echo $both_err; ?>
+                        <div class="mt-2">
+                        <a href="teacher-forgot-password.php" style="color: #004500; margin-left: 3px;" id="forgotPass">Forgot Password?</a>
+                    </div>
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" id="admnsbmt" class="btn btn-primary">Log In</button>

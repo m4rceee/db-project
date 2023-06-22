@@ -6,39 +6,32 @@ session_start();
 if (isset($_SESSION['status'])) {
     $status = "<div class='alert alert-success alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
     unset($_SESSION['status']);
-} 
-if (isset($_SESSION['status'])) {
-  $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
-  unset($_SESSION['status']);
-} 
+} elseif (isset($_SESSION['error'])) {
+    $status = "<div class='alert alert-danger alert-dismissible fade show mt-2'><strong>{$_SESSION['error']}</strong></div>";
+    unset($_SESSION['error']);
+} else {
+    $status = "";
+}
 
-$status="";
+if (!$conn) {
+    die("Connection Failed: " . mysqli_connect_error());
+}
 
-    //$con = mysqli_connect("localhost", "root", "", "teachers_db");
+if (isset($_POST['delete_teacher'])) {
+    $teacher_id = mysqli_real_escape_string($conn, $_POST['delete_teacher']);
 
-    if(!$conn) {
-    die("Connection Failed: ". mysqli_connect_error());
-    }
+    $query = "DELETE FROM teachers WHERE EMP='$teacher_id'";
+    $query_run = mysqli_query($conn, $query);
 
-    if(isset($_POST['delete_teacher'])) {
-        $teacher_id = mysqli_real_escape_string($conn, $_POST['delete_teacher']);
-
-        $query = "DELETE FROM teachers where EMP='$teacher_id'";
-        $query_run = mysqli_query($conn, $query);
-
-        if($query_run) {
-            session_start();
-            $_SESSION['status'] = "Teacher deleted successfully.";
-            header("Location: admin-teacher.php");
-            exit();
-        } else {
-            session_start();
-            $_SESSION['status'] = "Teacher delete unsuccessfull.";
-            header("Location: admin-teacher.php");
-            exit();
-        }
+    if ($query_run) {
+        $_SESSION['status'] = "Teacher deleted successfully.";
     } else {
-
+        $_SESSION['error'] = "Teacher deletion unsuccessful.";
     }
+} else {
+    $_SESSION['error'] = "Invalid request.";
+}
 
+header("Location: admin-teacher.php");
+exit();
 ?>
