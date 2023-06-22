@@ -15,11 +15,11 @@ if (isset($_POST['delete_record'])) {
     $deleteResult = mysqli_query($conn, $deleteQuery);
 
     if ($deleteResult) {
-        $_SESSION['status'] = "Student deleted successfully.";
+        $_SESSION['status2'] = "Student deleted successfully.";
         header("Location: teacher.php?EMP=$teacherId");
         exit();
     } else {
-        $_SESSION['status'] = "Student delete unsuccessful.";
+        $_SESSION['status2'] = "Student delete unsuccessful.";
         header("Location: teacher.php?EMP=$teacherId");
         exit();
     }

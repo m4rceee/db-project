@@ -93,15 +93,25 @@ if(isset($_POST['save_course_subj'])) {
 
 <body>
     <div class="header">
-        <div class="container-fluid p-3">
+        <div class="headercontainer container-fluid p-3">
             <div class="d-flex align-items-center mb-3">
                 <img src="logo.svg" alt="Logo" width="85">
                 <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
               </div>
         </div>
-        
-        <ul class="nav nav-tabs">
+
+        <div class="container-fluid mt-3 mb-3">
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <h1 class="text-white mb-0">Hello, Admin!</h1>
+                <div class="d-flex align-items-center">
+                  <button id="logout" onclick="window.location.href='logout.php'" class="btn text-white ms-auto me-0">Logout</button>
+                </div>
+              </div> 
+            </div>
+            <div class="card-body">
+            <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link" href="admin-teacher.php" id="nav-item1">Teacher</a>
             </li>
@@ -112,7 +122,7 @@ if(isset($_POST['save_course_subj'])) {
                 <a class="nav-link" href="admin-course&subj.php" id="nav-item3">Course & Subject</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="admin-attendance.html" id="nav-item4">Attendance</a>
+                <a class="nav-link" href="admin-attendance.php" id="nav-item4">Attendance</a>
             </li>
             </ul>
     </div>
@@ -144,7 +154,7 @@ if(isset($_POST['save_course_subj'])) {
                               <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Psychology')">BS Psychology</a></li>
                               <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Tourism Management')">BS Tourism Management</a></li>
                             </ul>
-                          </div>
+                        </div>
 
                           <div class="mb-3">
                             <label for="subject" class="form-label mt-3"><h1 style="color: #fff;">ADD SUBJECT:</h1></label>
@@ -218,6 +228,11 @@ if(isset($_POST['save_course_subj'])) {
             </div>
         </div>
     </div>
+            </div>
+          </div>
+        </div>
+        
+        
 
     <!-- script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

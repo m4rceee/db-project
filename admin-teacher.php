@@ -119,15 +119,24 @@ if (isset($_SESSION['status2'])) {
 
   <body>
       <div class="header">
-          <div class="container-fluid p-3">
+          <div class="headercontainer container-fluid p-3">
               <div class="d-flex align-items-center mb-3">
                   <img src="logo.svg" alt="Logo" width="85">
                   <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-                  <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
-                </div>
-              
+              </div>
           </div>
-          <ul class="nav nav-tabs">
+          <div class="container-fluid mt-3 mb-3">
+            <div class="card">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h1 class="text-white mb-0">Hello, Admin!</h1>
+                  <div class="d-flex align-items-center">
+                    <button id="logout" onclick="window.location.href='logout.php'" class="btn text-white ms-auto me-0">Logout</button>
+                  </div>
+                </div>    
+              </div>
+              <div class="card-body">
+              <ul class="nav nav-tabs">
               <li class="nav-item">
                   <a class="nav-link" href="admin-teacher.php" id="nav-item1">Teacher</a>
               </li>
@@ -138,7 +147,7 @@ if (isset($_SESSION['status2'])) {
                   <a class="nav-link" href="admin-course&subj.php" id="nav-item3">Course & Subject</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="admin-attendance.html" id="nav-item4">Attendance</a>
+                  <a class="nav-link" href="admin-attendance.php" id="nav-item4">Attendance</a>
               </li>
               </ul>
       </div>
@@ -248,6 +257,11 @@ if (isset($_SESSION['status2'])) {
               </div>
           </div>
       </div>
+              </div>
+            </div>
+          </div>
+
+          
 
       <!-- Bootstrap modal -->
       <div class="modal fade" id="myModal">

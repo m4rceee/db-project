@@ -12,7 +12,12 @@ if (isset($_SESSION['status'])) {
   unset($_SESSION['status']);
 } 
 
-$notfound_err = $status = "";
+if (isset($_SESSION['status2'])) {
+    $status2 = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status2']}</strong></div>";
+    unset($_SESSION['status2']);
+  } 
+
+$notfound_err = $status = $status2 = "";
 
     // UPDATE RECORD
     if(isset($_POST['update_attendance'])) {
@@ -30,12 +35,12 @@ $notfound_err = $status = "";
         $query_run = mysqli_query($conn, $query);
         if($query_run) {
             session_start();
-            $_SESSION['status'] = "Record updated successfully.";
+            $_SESSION['status2'] = "Record updated successfully.";
             header("Location: teacher.php?EMP=$teacherId");
             exit();
         } else {
             session_start();
-            $_SESSION['status'] = "Record update unsuccessful.";
+            $_SESSION['status2'] = "Record update unsuccessful.";
             header("Location: teacher.php?EMP=$teacherId");
             exit();
         }

@@ -3,7 +3,7 @@ include("db_conn.php");
 
 session_start();
 
-$fullname_err = $subjcode_err = $status1 = $status = $both_err = $emptyField = "";
+$fullname_err = $subjcode_err = $status3 = $status2 = $status1 = $status = $both_err = $emptyField = "";
 
 if (isset($_SESSION['status'])) {
     $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
@@ -14,6 +14,16 @@ if (isset($_SESSION['status1'])) {
   $status1 = "<div class='alert alert-danger alert-dismissible fade show mt-2'><strong>{$_SESSION['status1']}</strong></div>";
   unset($_SESSION['status1']);
 }
+
+if (isset($_SESSION['status2'])) {
+  $status2 = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status2']}</strong></div>";
+  unset($_SESSION['status2']);
+} 
+
+if (isset($_SESSION['status3'])) {
+  $status3 = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status3']}</strong></div>";
+  unset($_SESSION['status3']);
+} 
 
 if(isset($_POST['submit_student'])) {
 
@@ -122,13 +132,14 @@ if(isset($_POST['submit_student'])) {
             if(mysqli_num_rows($query_run) > 0) {
               $teacher = mysqli_fetch_array($query_run);
               ?>
+              <?php echo $status3; ?>
               <div class="card">
                 <div class="card-header">
                   <div class="d-flex align-items-center mb-3">
                     <img src="user.svg">
                     <h1 class="teachername mb-0" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;"><strong><!--<?php echo $teacher['full_name'];?>-->TEACHER PROFILE</strong>
                     </h1> 
-                    <a class="btn text-white ms-auto me-0 w-17" href="#" id="chgpass" style="font-size: 12px;">Change Password</a>
+                    <a class="btn text-white ms-auto me-0 w-17" href="change_password_teacher.php?EMP=<?= $teacher_id; ?>" id="chgpass" style="font-size: 12px;">Change Password</a>
                   </div>
                 </div>
 
@@ -205,6 +216,7 @@ if(isset($_POST['submit_student'])) {
       </div>
 
       <div class="container mt-3">
+      <?php echo $status2; ?>
         <div class="card">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -318,7 +330,7 @@ if(isset($_POST['submit_student'])) {
                 statusColumn.innerHTML = '<img src="absent.svg" alt="Absent">';
               }
 
-              //Remove the buttons
+              // Remove the buttons
               var presentButton = document.querySelector("#attendance-row-" + attendanceId + " .present-btn");
               var absentButton = document.querySelector("#attendance-row-" + attendanceId + " .absent-btn");
               presentButton.remove();

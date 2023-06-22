@@ -20,11 +20,18 @@ body {
 }
 
 #logout {
-    color: #004500;
+  margin-left: 150px;
+  background-color: #018100;
+  transition-duration: 0.2s;
 }
 
 #logout:hover {
-    color: #018100;
+  background-color: #018100;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.adminheader {
+background-color: #004500;
 }
 
 .nav-tabs {

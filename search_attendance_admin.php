@@ -3,13 +3,12 @@ include("db_conn.php");
 
 // Retrieve the search query from the URL parameter
 $searchQuery = $_GET['search'];
-$emp = $_GET['EMP'];
 
 if (!empty($searchQuery)) { 
 
     // Perform the database query to fetch the search results
     // Modify the query based on your table structure and search logic
-    $query = "SELECT * FROM attendance WHERE teacher_id='$emp' AND (full_name LIKE '%$searchQuery%'
+    $query = "SELECT * FROM attendance WHERE (full_name LIKE '%$searchQuery%'
             OR student_number LIKE '%$searchQuery%'
             OR year LIKE '%$searchQuery%'
             OR course LIKE '%$searchQuery%'
@@ -31,7 +30,6 @@ if (!empty($searchQuery)) {
                     <th>Subject</th>
                     <th>Date</th>
                     <th>Status</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,24 +50,9 @@ if (!empty($searchQuery)) {
                             <?php } elseif ($student['status'] === 'absent') { ?>
                             <img src="absent.svg" alt="Absent">
                             <?php } else { ?>
-                                    <span class="status-icon"></span>
-                                    <a href="#" class="btn present-btn">
-                                        <img src="present.svg">
-                                    </a>
-                                    <a href="#" class="btn absent-btn">
-                                        <img src="absent.svg">
-                                    </a>
+                                <span class="status-icon"></span>
+                                  <img src="no-attendance.svg" alt="Status">
                     <?php } ?>
-                </td>
-                <td>
-                    <a href="attendance-edit.php?attendance_id=<?= $student['attendance_id']; ?>&teacher_id=<?= $student['teacher_id']; ?>" class="btn btn-sm">
-                    <img src="user-edit.svg">
-                    </a>
-                    <form action="#" method="POST" class="d-inline">
-                    <button type="submit" name="delete_teacher" value="#" class="btn btn-sm delete-row-btn">
-                        <img src="user-remove.svg">
-                    </button>
-                    </form>
                 </td>
                 </tr>
             </tbody>
@@ -81,10 +64,11 @@ if (!empty($searchQuery)) {
         }        
 } else {
     // Fetch all records from the attendance table
-    $teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
-    $query = "SELECT * FROM attendance WHERE teacher_id='$teacher_id' ORDER BY date DESC";
+    $query = "SELECT * FROM attendance ORDER BY date DESC";
     $query_run = mysqli_query($conn, $query);
-    ?>
+
+    if (mysqli_num_rows($query_run) > 0) {
+        ?>
         <table id="attendance-table" class="table table-hover table-striped">
             <thead class="table-success">
                 <tr>
@@ -95,13 +79,10 @@ if (!empty($searchQuery)) {
                     <th>Subject</th>
                     <th>Date</th>
                     <th>Status</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
         <?php
-
-    if (mysqli_num_rows($query_run) > 0) {
         foreach ($query_run as $student) {
             ?>
             <tr id="attendance-row-<?= $student['attendance_id'] ?>" data-attendance-id="<?= $student['attendance_id'] ?>">
@@ -118,23 +99,8 @@ if (!empty($searchQuery)) {
                         <img src="absent.svg" alt="Absent">
                     <?php } else { ?>
                         <span class="status-icon"></span>
-                        <a href="#" class="btn present-btn">
-                            <img src="present.svg">
-                        </a>
-                        <a href="#" class="btn absent-btn">
-                            <img src="absent.svg">
-                        </a>
+                        <img src="no-attendance.svg" alt="Status">
                     <?php } ?>
-                </td>
-                <td>
-                    <a href="attendance-edit.php?attendance_id=<?= $student['attendance_id']; ?>&teacher_id=<?= $student['teacher_id']; ?>" class="btn btn-sm">
-                        <img src="user-edit.svg">
-                    </a>
-                    <form action="#" method="POST" class="d-inline">
-                        <button type="submit" name="delete_teacher" value="#" class="btn btn-sm delete-row-btn">
-                            <img src="user-remove.svg">
-                        </button>
-                    </form>
                 </td>
             </tr>
             <?php
