@@ -24,6 +24,8 @@ $status="";
             session_start();
             $_SESSION['status'] = "Subject deleted successfully.";
             header("Location: admin-course&subj.php");
+            $query = "ALTER TABLE subjects AUTO_INCREMENT = 1";
+            $query_run = mysqli_query($conn, $query);
             exit();
         } else {
             session_start();

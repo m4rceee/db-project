@@ -82,11 +82,22 @@ body {
 
 /* ADMIN LOG IN PAGE */ 
 #admnsbmt {
-    height: 50px;
+    height: auto;
     width: 200px;
     margin-top: 15px;
     margin-bottom: 15px;
     font-size: 20px;
+    background-color: #018100;
+    border-style: none;
+    border-radius: 41px;
+}
+
+#otpsbmt {
+    height: auto;
+    width: 200px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 12px;
     background-color: #018100;
     border-style: none;
     border-radius: 41px;

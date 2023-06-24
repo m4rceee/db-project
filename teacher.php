@@ -224,7 +224,9 @@ if(isset($_POST['submit_student'])) {
               <h1 class="text-white mb-0">Record Attendance</h1>
               <div class="d-flex align-items-center">
                 <input type="text" id="search-input" class="form-control me-2" placeholder="Search">
-                <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #004500;">Search</button>
+                <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #004500;">
+                  <img src="search.svg">
+                </button>
               </div>
             </div>
           </div>

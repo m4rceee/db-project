@@ -1,7 +1,9 @@
 <?php
 include("db_conn.php");
 
+
 session_start();
+date_default_timezone_set('Asia/Manila');
 
 $status1 = $status = $emptyField = "";
 
@@ -39,6 +41,7 @@ if(isset($_POST['save_course_subj'])) {
     $selectedCourse = $_POST['dropdown'];
     $subject = $_POST['subject'];
     $subjectCode = $_POST['code'];
+    $currentDate = date('Y-m-d'); // get current date
 
     $query = "SELECT * FROM subjects WHERE subj_name = ? AND subj_code = ?";
     $stmt = mysqli_prepare($conn, $query);
@@ -52,9 +55,9 @@ if(isset($_POST['save_course_subj'])) {
         header("Location: admin-course&subj.php");
         exit();
     } else {
-        $query = "INSERT INTO subjects (course, subj_name, subj_code) VALUES (?, ?, ?)";
+        $query = "INSERT INTO subjects (course, subj_name, subj_code, date_added) VALUES (?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "sss", $selectedCourse, $subject, $subjectCode);
+        mysqli_stmt_bind_param($stmt, "ssss", $selectedCourse, $subject, $subjectCode, $currentDate);
         mysqli_stmt_execute($stmt);
 
         if (mysqli_stmt_affected_rows($stmt) > 0) {
@@ -104,7 +107,7 @@ if(isset($_POST['save_course_subj'])) {
           <div class="card">
             <div class="card-header">
               <div class="d-flex justify-content-between align-items-center">
-                <h1 class="text-white mb-0">Hello, Admin!</h1>
+                <h1 class="headertext text-white mb-0">Hello, Admin!</h1>
                 <div class="d-flex align-items-center">
                   <button id="logout" onclick="window.location.href='logout.php'" class="btn text-white ms-auto me-0">Logout</button>
                 </div>
@@ -180,9 +183,16 @@ if(isset($_POST['save_course_subj'])) {
             <div class="card mt-3" id="course-subjcard">
                 <div class="card-body">
                     <div class="card-title">
-                        <h1>COURSES & SUBJECTS:</h1>
-                    </div>
-                    <table class="table table-borderless table-striped table-hover">
+                      <div class="d-flex justify-content-between align-items-center">
+                            <h1 class="mb-0" style="color: #004500;">COURSES & SUBJECTS: </h1>
+                            <div class="d-flex align-items-center">
+                              <input type="text" id="search-input" class="form-control me-2" placeholder="Search">
+                              <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #004500;">
+                                <img src="search.svg">
+                              </button>
+                            </div>
+                      </div>
+                    <table id="subject-table" class="table table-borderless table-striped table-hover">
                         <thead class="table-success">
                           <tr>
                             <th>ID</th>
@@ -241,6 +251,37 @@ if(isset($_POST['save_course_subj'])) {
           document.getElementById("dropdown").textContent = selectedCourse;
           document.getElementById("selectedCourse").value = selectedCourse;
         }
+
+        // Function to handle search button click
+        function fetchSearchResults() {
+            // Get the search input value
+            var searchInput = document.getElementById("search-input").value;
+
+            // Create a new XMLHttpRequest object
+            var xhr = new XMLHttpRequest();
+
+            // Prepare the request
+            xhr.open("GET", "search_subject.php?search=" + encodeURIComponent(searchInput), true);
+
+            // Send the request
+            xhr.send();
+
+            // Handle the response from the server
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Response received, update the table with search results
+                var table = document.getElementById("subject-table");
+                table.innerHTML = xhr.responseText;
+            }
+            };
+        }
+
+        // Add event listener to the search button
+        var searchButton = document.getElementById("search-button");
+        searchButton.addEventListener("click", function(e) {
+            e.preventDefault();
+            fetchSearchResults();
+        });
     </script>
 </body>
 </html>

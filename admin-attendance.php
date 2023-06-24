@@ -52,10 +52,12 @@
         <div class="card">
           <div class="attendanceRecord card-header">
             <div class="d-flex justify-content-between align-items-center">
-              <h1 class="mb-0">Attendance Record</h1>
+              <h1 class="mb-0">ATTENDANCE RECORDS</h1>
               <div class="d-flex align-items-center">
                 <input type="text" id="search-input" class="form-control me-2" placeholder="Search">
-                <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #004500;">Search</button>
+                <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #004500;">
+                  <img src="search.svg">
+                </button>
               </div>
             </div>
           </div>

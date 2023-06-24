@@ -1,5 +1,13 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'phpmailer/src/Exception.php';
+require 'phpmailer/src/PHPMailer.php';
+require 'phpmailer/src/SMTP.php';
+
 include("db_conn.php");
+date_default_timezone_set('Asia/Manila');
 
 session_start();
 
@@ -62,6 +70,7 @@ if (isset($_SESSION['status2'])) {
         $contact = mysqli_real_escape_string($conn, $_POST['contact']);
         $email = mysqli_real_escape_string($conn, $_POST['email']);
         $password = generateRandomPassword(8);
+        $currentDate = date('Y-m-d'); // get current date
 
         // VALIDATION FOR EXISTING TEACHER
         $query = "SELECT email FROM teachers WHERE email = ?";
@@ -77,23 +86,79 @@ if (isset($_SESSION['status2'])) {
             exit();
           } else {
 
-            // REGISTER THE TEACHER IF THERE ISN'T EXISTING ONE ON THE DATABASE
-            $query = "INSERT INTO teachers (full_name, gender, birthdate, city, department, contact, email, password) 
-                  VALUES ('$fullname', '$gender', '$birthdate', '$city', '$department', '$contact', '$email', '$password')";
-            
-            $query_run = mysqli_query($conn, $query);
+            // VALIDATION FOR WHEN IT IS A REGISTERED STUDENT
+            $query = "SELECT email FROM students WHERE email = ?";
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "s", $email);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
 
-            if($query_run) {
+            if (mysqli_stmt_num_rows($stmt) > 0) {
+
               session_start();
-              $_SESSION['status'] = "Teacher created successfully.";
-              $redirectURL = 'admin-teacher.php?success=true&email=' . urlencode($email) . '&password=' . urlencode($password);
-              header('Location: ' . $redirectURL);
-              exit();
-            } else {
-              session_start();
-              $_SESSION['status1'] = "Teacher creation unsuccessful.";
+              $_SESSION['status1'] = "Profile you are trying to register is already registered as a student.";
               header("Location: admin-teacher.php");
               exit();
+
+            } else {
+
+              // REGISTER THE TEACHER IF THERE ISN'T EXISTING ONE ON THE DATABASE
+              $query = "INSERT INTO teachers (full_name, gender, birthdate, city, department, contact, email, password, date_added) 
+              VALUES ('$fullname', '$gender', '$birthdate', '$city', '$department', '$contact', '$email', '$password', '$currentDate')";
+              
+              $query_run = mysqli_query($conn, $query);
+
+              if($query_run) {
+
+                session_start();
+                $_SESSION['status'] = "Teacher created successfully.";
+                $redirectURL = 'admin-teacher.php?success=true&email=' . urlencode($email) . '&password=' . urlencode($password);
+                header('Location: ' . $redirectURL);
+
+                $mail = new PHPMailer(true);
+                $mail->isSMTP();
+                $mail->Host =  'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'marcelinoryan.paul@gmail.com';
+                $mail->Password = 'dfkoqclatjaxczbp';
+                $mail->SMTPSecure = 'ssl';
+                $mail->Port = 465;
+
+                $mail->setFrom('marcelinoryan.paul@gmail.com');
+
+                $mail->addAddress($email);
+
+                $mail->isHTML(true);
+
+                $mail->Subject = 'Registration Details';
+                $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
+
+                $mail->Body = "Dear <em>$fullname</em>, <br>";
+                $mail->Body .= "<br>We have successfully registered you. Here are your registration details: <br>";
+                $mail->Body .= "<br>";
+                $mail->Body .= "<strong>Full Name:</strong> $fullname <br>";
+                $mail->Body .= "<strong>Gender:</strong> $gender <br>";
+                $mail->Body .= "<strong>Birthdate:</strong> $birthdate <br>";
+                $mail->Body .= "<strong>City:</strong> $city <br>";
+                $mail->Body .= "<strong>Department:</strong> $department <br>";
+                $mail->Body .= "<strong>Contact:</strong> $contact <br>";
+                $mail->Body .= "<strong>*Email:</strong> $email <br>";
+                $mail->Body .= "<strong>*Password:</strong> $password <br>";
+                $mail->Body .= "<br>* <em>Required for logging in</em> <br>";
+                $mail->Body .= "<br>";
+                $mail->Body .= "It would be appreciated if you kept this information confidential.<br>";
+                $mail->Body .= "With best wishes,<br><em>Your School</em>";
+
+                $mail->send();
+
+                exit();
+
+              } else {
+                session_start();
+                $_SESSION['status1'] = "Teacher creation unsuccessful.";
+                header("Location: admin-teacher.php");
+                exit();
+              }
             }
           }
       }
@@ -207,9 +272,17 @@ if (isset($_SESSION['status2'])) {
               <div class="card mt-3" id="teachercard">
                   <div class="card-body">
                       <div class="card-title">
-                          <h1 style="color: #004500;">TEACHERS:</h1>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <h1 class="mb-0" style="color: #004500;">TEACHERS: </h1>
+                          <div class="d-flex align-items-center">
+                            <input type="text" id="search-input" class="form-control me-2" placeholder="Search">
+                            <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #004500;">
+                              <img src="search.svg">
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <table class="table table-borderless table-striped table-hover">
+                      <table id="teacher-table" class="table table-borderless table-striped table-hover">
                           <thead class="table-success">
                             <tr>
                               <th>EMP</th>
@@ -317,6 +390,37 @@ if (isset($_SESSION['status2'])) {
             $('#modalEmail').text(email);
             $('#modalPassword').text(password);
           <?php } ?>
+        });
+
+        // Function to handle search button click
+        function fetchSearchResults() {
+            // Get the search input value
+            var searchInput = document.getElementById("search-input").value;
+
+            // Create a new XMLHttpRequest object
+            var xhr = new XMLHttpRequest();
+
+            // Prepare the request
+            xhr.open("GET", "search_teacher.php?search=" + encodeURIComponent(searchInput), true);
+
+            // Send the request
+            xhr.send();
+
+            // Handle the response from the server
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Response received, update the table with search results
+                var table = document.getElementById("teacher-table");
+                table.innerHTML = xhr.responseText;
+            }
+            };
+        }
+
+        // Add event listener to the search button
+        var searchButton = document.getElementById("search-button");
+        searchButton.addEventListener("click", function(e) {
+            e.preventDefault();
+            fetchSearchResults();
         });
         
       </script>

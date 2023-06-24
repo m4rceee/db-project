@@ -16,6 +16,8 @@ if (isset($_POST['delete_record'])) {
 
     if ($deleteResult) {
         $_SESSION['status2'] = "Student deleted successfully.";
+        $query = "ALTER TABLE attendance AUTO_INCREMENT = 1";
+        $query_run = mysqli_query($conn, $query);
         header("Location: teacher.php?EMP=$teacherId");
         exit();
     } else {

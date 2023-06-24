@@ -15,7 +15,8 @@ if (!empty($searchQuery)) {
             OR course LIKE '%$searchQuery%'
             OR subj_code LIKE '%$searchQuery%'
             OR date LIKE '%$searchQuery%'
-            OR status LIKE '%$searchQuery%') ORDER BY date DESC";
+            OR status LIKE '%$searchQuery%'
+            or teacher_id LIKE '%$searchQuery%') ORDER BY date DESC";
 
     $query_run = mysqli_query($conn, $query);
 

@@ -25,8 +25,12 @@ if (isset($_POST['delete_teacher'])) {
 
     if ($query_run) {
         $_SESSION['status'] = "Teacher deleted successfully.";
+        header("Location: admin-teacher.php");
+        $query = "ALTER TABLE teachers AUTO_INCREMENT = 1";
+        $query_run = mysqli_query($conn, $query);
     } else {
         $_SESSION['error'] = "Teacher deletion unsuccessful.";
+        header("Location: admin-teacher.php");
     }
 } else {
     $_SESSION['error'] = "Invalid request.";
