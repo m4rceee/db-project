@@ -12,7 +12,7 @@ if (!empty($searchQuery)) {
                 OR EMP LIKE '%$searchQuery%'
                 OR department LIKE '%$searchQuery%'
                 OR date_added LIKE '%$searchQuery%'
-                or teacher_id LIKE '%$searchQuery%')";
+                or EMP LIKE '%$searchQuery%')";
 
     $query_run = mysqli_query($conn, $query);
 

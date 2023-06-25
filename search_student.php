@@ -12,8 +12,7 @@ if (!empty($searchQuery)) {
                 OR student_number LIKE '%$searchQuery%'
                 OR year LIKE '%$searchQuery%'
                 OR course LIKE '%$searchQuery%'
-                OR date_added LIKE '%$searchQuery%'
-                or teacher_id LIKE '%$searchQuery%')";
+                OR date_added LIKE '%$searchQuery%')";
 
     $query_run = mysqli_query($conn, $query);
 

@@ -25,7 +25,7 @@ $updateSuccess = $both_err = $notfound_err = $email_err = $password_err="";
                     header("Location: teacher.php?EMP={$teacher['EMP']}");
                     exit();
                 } else {
-                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect email or password.</strong></div>";
+                    $notfound_err = "<div class='alert alert-danger mt-2' style=\"font-family: 'Poppins', sans-serif;\"><strong>Incorrect email or password.</strong></div>";
                 }
             }
         } else if(empty($_POST['email']) && !empty($_POST['pswd'])) {
@@ -53,6 +53,14 @@ $updateSuccess = $both_err = $notfound_err = $email_err = $password_err="";
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+        #forgotPass {
+            color:#004500;
+            transition-duration: 0.4s;
+        }
+
+        #forgotPass:hover {
+            color:#018100;
+        }
     </style>
     
     <title>Teacher Log In Page</title>

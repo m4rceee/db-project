@@ -152,7 +152,7 @@ if (isset($_SESSION['status1'])) {
                   $mail->Body = "Dear <em>$fullname</em>, <br>";
                   $mail->Body .= "<br>We have successfully registered you. Here are your registration details: <br>";
                   $mail->Body .= "<br>";
-                  $mail->Body .= "<strong>*Student Number:</strong> $fullname <br>";
+                  $mail->Body .= "<strong>* Student Number:</strong> $studentNumber <br>";
                   $mail->Body .= "<strong>Full Name:</strong> $fullname <br>";
                   $mail->Body .= "<strong>Gender:</strong> $gender <br>";
                   $mail->Body .= "<strong>Birthdate:</strong> $birthdate <br>";
@@ -160,8 +160,8 @@ if (isset($_SESSION['status1'])) {
                   $mail->Body .= "<strong>Year:</strong> $year <br>";
                   $mail->Body .= "<strong>Course:</strong> $course <br>";
                   $mail->Body .= "<strong>Contact:</strong> $contact <br>";
-                  $mail->Body .= "<strong>*Email:</strong> $email <br>";
-                  $mail->Body .= "<strong>*Password:</strong> $password <br>";
+                  $mail->Body .= "<strong>Email:</strong> $email <br>";
+                  $mail->Body .= "<strong>* Password:</strong> $password <br>";
                   $mail->Body .= "<br>* <em>Required for logging in</em> <br>";
                   $mail->Body .= "<br>";
                   $mail->Body .= "It would be appreciated if you kept this information confidential.<br>";

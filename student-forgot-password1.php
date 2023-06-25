@@ -48,13 +48,13 @@ if(isset($_POST['sendOtp'])) {
 
         session_start();
         $_SESSION['status2'] = "Please enter an email.";
-        header("Location: teacher-forgot-password1.php");
+        header("Location: student-forgot-password1.php");
         exit();
 
     } else {
 
         $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $query = "SELECT * FROM teachers WHERE email = ?";
+        $query = "SELECT * FROM students WHERE email = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
@@ -63,7 +63,7 @@ if(isset($_POST['sendOtp'])) {
         if (mysqli_stmt_num_rows($stmt) > 0) {
 
             $otp = mt_rand(100000, 999999);
-            $query = "UPDATE teachers SET otp = '$otp' WHERE email = '$email'";
+            $query = "UPDATE students SET otp = '$otp' WHERE email = '$email'";
             $query_run = mysqli_query($conn, $query);
 
             session_start();
@@ -93,14 +93,14 @@ if(isset($_POST['sendOtp'])) {
 
                 $mail->send();
 
-                header("Location: teacher-forgot-password1.php");
+                header("Location: student-forgot-password1.php");
                 exit();
 
         } else {
 
             session_start();
             $_SESSION['status2'] = "Email isn't registered.";
-            header("Location: teacher-forgot-password1.php");
+            header("Location: student-forgot-password1.php");
             exit();
 
         }
@@ -113,7 +113,7 @@ if(isset($_POST['passRenew'])) {
 
         session_start();
         $_SESSION['status2'] = "Please enter the OTP.";
-        header("Location: teacher-forgot-password1.php");
+        header("Location: student-forgot-password1.php");
         exit();
 
     } else {
@@ -121,7 +121,7 @@ if(isset($_POST['passRenew'])) {
         $otp = mysqli_real_escape_string($conn, $_POST['otp']);
         $email = $_SESSION['email']; // Retrieve the email from session
 
-        $query = "SELECT * FROM teachers WHERE email = ? AND otp = ?";
+        $query = "SELECT * FROM students WHERE email = ? AND otp = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "ss", $email, $otp);
         mysqli_stmt_execute($stmt);
@@ -129,12 +129,12 @@ if(isset($_POST['passRenew'])) {
 
         if (mysqli_stmt_num_rows($stmt) > 0) {
             // OTP is correct, redirect to another page
-            header("Location: teacher-forgot-password2.php");
+            header("Location: student-forgot-password2.php");
             exit();
         } else {
             session_start();
             $_SESSION['status2'] = "Invalid OTP.";
-            header("Location: teacher-forgot-password1.php");
+            header("Location: student-forgot-password1.php");
             exit();
         }
     }
@@ -156,7 +156,7 @@ if(isset($_POST['passRenew'])) {
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
     </style>
     
-    <title>Teacher Forgot Password Page 1</title>
+    <title>Student Forgot Password Page 1</title>
 </head>
 
 <body>
@@ -172,7 +172,7 @@ if(isset($_POST['passRenew'])) {
     <div class="cn-1 container">
         <div class="card mx-auto">
             <div class="card-body">
-                <form action="teacher-forgot-password1.php" method="POST">
+                <form action="student-forgot-password1.php" method="POST">
                     <div class="card-title text-center mt-3 mb-2">
                         <h5 class="adminlogin">Forgot Password?</h5>
                         <?php echo $status; ?>
@@ -198,7 +198,7 @@ if(isset($_POST['passRenew'])) {
             </div>
         </div>
     </div>
-    <a class="homebtn btn btn-floating text-white" href="teacher-login.php" role="button" id="homebtn">Back</a>
+    <a class="homebtn btn btn-floating text-white" href="student-login.php" role="button" id="homebtn">Back</a>
 
     <!-- script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

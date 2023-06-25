@@ -64,12 +64,12 @@ if(isset($_POST['renewPass'])) {
         if ($newPassword !== $confirmPassword) {
 
             $_SESSION['status2'] = "Passwords do not match!";
-            header("Location: teacher-forgot-password2.php");
+            header("Location: student-forgot-password2.php");
             exit();
 
         } else {
             
-            $query = "UPDATE teachers SET password = '$newPassword' WHERE email = '$email'";
+            $query = "UPDATE students SET password = '$newPassword' WHERE email = '$email'";
             if (mysqli_query($conn, $query)) {
                 
                 session_start();
@@ -100,16 +100,16 @@ if(isset($_POST['renewPass'])) {
 
                 $mail->send();
 
-                $query = "UPDATE teachers SET otp = NULL WHERE email = '$email'";
+                $query = "UPDATE students SET otp = NULL WHERE email = '$email'";
                 $query_run = mysqli_query($conn, $query);
 
-                header("Location: teacher-forgot-password2.php");
+                header("Location: student-forgot-password2.php");
                 exit();
 
             } else {
 
                 $_SESSION['status2'] = "Password Update Unuccessfully!";
-                header("Location: teacher-forgot-password2.ph");
+                header("Location: student-forgot-password2.ph");
                 exit();
 
             }
@@ -121,7 +121,7 @@ if(isset($_POST['renewPass'])) {
 
 if(isset($_POST['success'])) { 
 
-    header("Location: teacher-login.php");
+    header("Location: student-login.php");
     exit();
 
 }
@@ -143,7 +143,7 @@ if(isset($_POST['success'])) {
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
     </style>
     
-    <title>Teacher Forgot Password Page 2</title>
+    <title>Student Forgot Password Page 2</title>
 </head>
 
 <body>
@@ -159,7 +159,7 @@ if(isset($_POST['success'])) {
     <div class="cn-1 container">
         <div class="card mx-auto">
             <div class="card-body">
-                <form action="teacher-forgot-password2.php" method="POST">
+                <form action="student-forgot-password2.php" method="POST">
                     <div class="card-title text-center mt-3 mb-2">
                         <h5 class="adminlogin">Forgot Password?</h5>
                         <?php echo $emptyFields; ?>
@@ -198,7 +198,7 @@ if(isset($_POST['success'])) {
             </div>
         </div>
     </div>
-    <a class="homebtn btn btn-floating text-white" href="teacher-login.php" role="button" id="homebtn">Back</a>
+    <a class="homebtn btn btn-floating text-white" href="student-login.php" role="button" id="homebtn">Back</a>
 
     <!-- script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

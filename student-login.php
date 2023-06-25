@@ -25,7 +25,7 @@ $both_err = $notfound_err = $studentNumber_err = $password_err="";
                     header("Location: student.php?student_number={$student['student_number']}");
                     exit();
                 } else {
-                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect student number or password.</strong></div>";
+                    $notfound_err = "<div class='alert alert-danger mt-2' style=\"font-family: 'Poppins', sans-serif;\"><strong>Incorrect student number or password.</strong></div>";
                 }
             }
         } else if(empty($_POST['studentNumber']) && !empty($_POST['pswd'])) {
@@ -95,7 +95,7 @@ $both_err = $notfound_err = $studentNumber_err = $password_err="";
                       <?php echo $password_err; ?>
                         <?php echo $both_err; ?>
                         <div class="mt-2">
-                        <a href="student-forgot-password.php" style="color: #004500; margin-left: 3px;" id="forgotPass">Forgot Password?</a>
+                        <a href="student-forgot-password1.php" style="color: #004500; margin-left: 3px;" id="forgotPass">Forgot Password?</a>
                     </div>
                     </div>
                     <div class="d-flex justify-content-center">

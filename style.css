@@ -134,11 +134,11 @@ body {
     transition-duration: 0.4s;
 }
 
-#admnsbmt {
+#admnsbmt, #otpsbmt {
     transition-duration: 0.4s;
 }
 
-.homebtn:hover, #admnsbmt:hover {
+.homebtn:hover, #admnsbmt:hover, #otpsbmt:hover {
     background-color: #004500;
 }
 
