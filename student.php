@@ -111,10 +111,15 @@ if(isset($_POST['submit_student'])) {
   </head>
 
   <body>
+    <?php
+      $studentNumber = mysqli_real_escape_string($conn, $_GET['student_number']);
+    ?>
       <div class="header">
           <div class="header-container container-fluid p-3">
               <div class="d-flex align-items-center mb-3">
+                <a href="student.php?student_number=<?php echo $studentNumber; ?>">
                   <img src="logo.svg" alt="Logo" width="85">
+                </a>
                   <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
                   <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
               </div>
@@ -134,7 +139,7 @@ if(isset($_POST['submit_student'])) {
               <?php echo $status3; ?>
               <div class="card">
                 <div class="card-header">
-                  <div class="d-flex align-items-center mb-3">
+                  <div class="d-flex align-items-center">
                     <img src="user.svg">
                     <h1 class="teachername mb-0" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;"><strong><!--<?php echo $student['full_name'];?>-->STUDENT PROFILE</strong>
                     </h1> 
@@ -145,17 +150,17 @@ if(isset($_POST['submit_student'])) {
                 <div class="card-body">
                   <div class="p-container">
                     <div class="line1">
-                      <p>Full name: <span style="text-decoration: underline;"><?php echo $student['full_name'];?></span></p>
-                      <p>Gender: <span style="text-decoration: underline;"><?php echo $student['gender'];?></span></p>
-                      <p>Date of Birth: <span style="text-decoration: underline;"><?php echo $student['birthdate'];?></span></p>
-                      <p>City: <span style="text-decoration: underline;"><?php echo $student['city'];?></span></p>
+                      <p>Full name: <strong><?php echo $student['full_name'];?></strong></p>
+                      <p>Gender: <strong><?php echo $student['gender'];?></strong></p>
+                      <p>Date of Birth: <strong><?php echo $student['birthdate'];?></strong></p>
+                      <p>City: <strong><?php echo $student['city'];?></strong></p>
                     </div>
                     <div class="line2">
-                      <p>Student Number: <span style="text-decoration: underline;"><?php echo $student['student_number'];?></span></p>
-                      <p>Year: <span style="text-decoration: underline;"><?php echo $student['year'];?></span></p>
-                      <p>Course: <span style="text-decoration: underline;"><?php echo $student['course'];?></span></p>
-                      <p>Contact Number: <span style="text-decoration: underline;"><?php echo $student['contact'];?></span></p>
-                      <p>E-mail: <span style="text-decoration: underline;"><?php echo $student['email'];?></span></p>
+                      <p>Student Number: <strong><?php echo $student['student_number'];?></strong></p>
+                      <p>Year: <strong><?php echo $student['year'];?></strong></p>
+                      <p>Course: <strong><?php echo $student['course'];?></strong></p>
+                      <p>Contact Number: <strong><?php echo $student['contact'];?></strong></p>
+                      <p>E-mail: <strong><?php echo $student['email'];?></strong></p>
                     </div>
                   </div>
                 </div>
@@ -286,7 +291,11 @@ if(isset($_POST['submit_student'])) {
                         <?php
                     }
                 } else {
-                    echo "No student record found.";
+                  ?>
+                  <tr>
+                      <td colspan="8" style="text-align: center;">No attendance record found.</td>
+                  </tr>
+                  <?php
                 }
                 ?>
               </tr>

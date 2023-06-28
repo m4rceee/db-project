@@ -102,10 +102,15 @@ $status2 = $status1 = $status = $emptyFields =  $incorrectPass = $status3 = $not
   </head>
 
   <body>
+    <?php
+      $teacherId = mysqli_real_escape_string($conn, $_GET['EMP']);
+    ?>
       <div class="header">
         <div class="container-fluid p-3">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="logo.svg" alt="Logo" width="85">
+                <a href="teacher.php?EMP=<?php echo $teacherId; ?>">
+                  <img src="logo.svg" alt="Logo" width="85">
+                </a>
                     <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
                     <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>

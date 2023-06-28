@@ -185,11 +185,14 @@ if (isset($_SESSION['status2'])) {
   <body>
       <div class="header">
           <div class="headercontainer container-fluid p-3">
-              <div class="d-flex align-items-center mb-3">
-                  <img src="logo.svg" alt="Logo" width="85">
-                  <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-              </div>
+            <div class="d-flex align-items-center mb-3">
+              <a href="admin-teacher.php">
+                <img src="logo.svg" alt="Logo" width="85">
+              </a>
+              <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+            </div>
           </div>
+          
           <div class="container-fluid mt-3 mb-3">
             <div class="card">
               <div class="card-header">
@@ -215,7 +218,7 @@ if (isset($_SESSION['status2'])) {
                   <a class="nav-link" href="admin-attendance.php" id="nav-item4">Attendance</a>
               </li>
               </ul>
-      </div>
+        </div>
 
       <div class="row">
           <!--REGISTER-->

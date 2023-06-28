@@ -43,7 +43,7 @@ if(isset($_POST['submit_student'])) {
     $studentResult = mysqli_stmt_get_result($stmt);
   
     // VALIDATION FOR EXISTING SUBJECT
-    $query2 = "SELECT subj_code FROM subjects WHERE subj_code = ?";
+    $query2 = "SELECT course, subj_code FROM subjects WHERE subj_code = ?";
     $stmt2 = mysqli_prepare($conn, $query2);
     mysqli_stmt_bind_param($stmt2, "s", $subjectCode);
     mysqli_stmt_execute($stmt2);
@@ -58,7 +58,7 @@ if(isset($_POST['submit_student'])) {
                 $column1Value = $studentRow['student_number'];
                 $column2Value = $studentRow['full_name'];
                 $column3Value = $studentRow['year'];
-                $column4Value = $studentRow['course'];
+                $column4Value = $subjectRow['course'];
                 $column5Value = $subjectRow['subj_code'];
   
                 // INSERT INTO THE ATTENDANCE DATABASE
@@ -113,10 +113,15 @@ if(isset($_POST['submit_student'])) {
   </head>
 
   <body>
+    <?php
+      $teacherId = mysqli_real_escape_string($conn, $_GET['EMP']);
+    ?>
       <div class="header">
           <div class="header-container container-fluid p-3">
               <div class="d-flex align-items-center mb-3">
+                <a href="teacher.php?EMP=<?php echo $teacherId; ?>">
                   <img src="logo.svg" alt="Logo" width="85">
+                </a>
                   <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
                   <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
               </div>
@@ -136,7 +141,7 @@ if(isset($_POST['submit_student'])) {
               <?php echo $status3; ?>
               <div class="card">
                 <div class="card-header">
-                  <div class="d-flex align-items-center mb-3">
+                  <div class="d-flex align-items-center">
                     <img src="user.svg">
                     <h1 class="teachername mb-0" style="font-size: 50px; margin-top: 0px; margin-bottom: 0px; margin-left: 10px;"><strong><!--<?php echo $teacher['full_name'];?>-->TEACHER PROFILE</strong>
                     </h1> 
@@ -147,15 +152,15 @@ if(isset($_POST['submit_student'])) {
                 <div class="card-body">
                   <div class="p-container">
                     <div class="line1">
-                      <p>Full name: <span style="text-decoration: underline;"><?php echo $teacher['full_name'];?></span></p>
-                      <p>Gender: <span style="text-decoration: underline;"><?php echo $teacher['gender'];?></span></p>
-                      <p>Date of Birth: <span style="text-decoration: underline;"><?php echo $teacher['birthdate'];?></span></p>
-                      <p>City: <span style="text-decoration: underline;"><?php echo $teacher['city'];?></span></p>
+                      <p>Full name: <strong><?php echo $teacher['full_name'];?></strong></p>
+                      <p>Gender: <strong><?php echo $teacher['gender'];?></strong></p>
+                      <p>Date of Birth: <strong><?php echo $teacher['birthdate'];?></strong></p>
+                      <p>City: <strong><?php echo $teacher['city'];?></strong></p>
                     </div>
                     <div class="line2">
-                      <p>Department: <span style="text-decoration: underline;"><?php echo $teacher['department'];?></span></p>
-                      <p>Contact Number: <span style="text-decoration: underline;"><?php echo $teacher['contact'];?></span></p>
-                      <p>E-mail: <span style="text-decoration: underline;"><?php echo $teacher['email'];?></span></p>
+                      <p>Department: <strong><?php echo $teacher['department'];?></strong></p>
+                      <p>Contact Number: <strong><?php echo $teacher['contact'];?></strong></p>
+                      <p>E-mail: <strong><?php echo $teacher['email'];?></strong></p>
                     </div>
                   </div>
                 </div>
@@ -293,7 +298,11 @@ if(isset($_POST['submit_student'])) {
                         <?php
                     }
                 } else {
-                    echo "No student record/Subject found.";
+                  ?>
+                  <tr>
+                      <td colspan="8" style="text-align: center;">No student attendance record found.</td>
+                  </tr>
+                  <?php
                 }
                 ?>
               </tr>

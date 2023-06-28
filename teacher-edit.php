@@ -103,7 +103,9 @@ $emptyFields = $status = "";
       <div class="header">
         <div class="container-fluid p-3">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="logo.svg" alt="Logo" width="85">
+                <a href="admin-teacher.php">
+                  <img src="logo.svg" alt="Logo" width="85">
+                </a>
                     <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
                     <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>

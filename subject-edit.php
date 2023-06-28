@@ -62,7 +62,9 @@ $notfound_err = $status = "";
       <div class="header">
         <div class="container-fluid p-3">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="logo.svg" alt="Logo" width="85">
+                <a href="admin-course&subj.php">
+                  <img src="logo.svg" alt="Logo" width="85">
+                </a>
                     <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
                     <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>
@@ -90,20 +92,22 @@ $notfound_err = $status = "";
                                         <input type="hidden" name="subject_id" value="<?= $subject_id?>">
 
                                         <div class="dropdown d-grid dropdown-menu-end">
-                                            <label for="dropdown" class="form-label mt-3"><h1 style="color: #fff;">COURSE:</h1></label>
+                                            <label for="dropdown" class="form-label mt-3">
+                                                <h1 style="color: #fff;">COURSE:</h1>
+                                            </label>
                                             <button type="button" class="btn dropdown-toggle text-white" data-bs-toggle="dropdown" id="dropdown" style="background-color: #004500;">
-                                                <?php echo $subject['course']; ?>
+                                                <?php echo isset($subject['course']) ? $subject['course'] : 'Select Course'; ?>
                                             </button>
-                                            <input type="hidden" id="selectedCourse" name="dropdown" value="">
+                                            <input type="hidden" id="selectedCourse" name="dropdown" value="<?php echo isset($subject['course']) ? $subject['course'] : ''; ?>">
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('Bachelor of Elementary Education')">Bachelor of Elementary Education</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('Bachelor of Secondary Education')">Bachelor of Secondary Education</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Business Management')">BS Business Management</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Computer Science')">BS Computer Science</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Hospitality Management')">BS Hospitality Management</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Information Technology')">BS Information Technology</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Psychology')">BS Psychology</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Tourism Management')">BS Tourism Management</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('Bachelor of Elementary Education')">Bachelor of Elementary Education</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('Bachelor of Secondary Education')">Bachelor of Secondary Education</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Business Management')">BS Business Management</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Computer Science')">BS Computer Science</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Hospitality Management')">BS Hospitality Management</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Information Technology')">BS Information Technology</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Psychology')">BS Psychology</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="updateDropdownButton('BS Tourism Management')">BS Tourism Management</a></li>
                                             </ul>
                                         </div>
 

@@ -23,7 +23,9 @@ include("db_conn.php");
       <div class="header">
         <div class="container-fluid p-3">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="logo.svg" alt="Logo" width="85">
+                <a href="admin-student.php">
+                  <img src="logo.svg" alt="Logo" width="85">
+                </a>
                     <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
                     <a id="logout" href="logout.php" class="ms-auto me-0">Logout</a>
                 </div>
@@ -50,7 +52,7 @@ include("db_conn.php");
 
                                             <div class="mb-3 mt-3">
                                             <label for="fullname" class="form-label">Student Number:</label>
-                                            <span style="color: #004500; font-size: 12px;"><p><strong>*Please use this as a credential for logging in the user.</strong></p></span>
+                                            <span style="color: #004500; font-size: 12px;"><p><strong>*Credential for user logging in.</strong></p></span>
                                             <p class="form-control"><?=$student['student_number'];?></p>        
                                             </div>
 
@@ -96,7 +98,7 @@ include("db_conn.php");
 
                                             <div class="mb-3">
                                             <label for="password" class="form-label">Password:</label>
-                                            <span style="color: #004500; font-size: 12px;"><p><strong>*Please use this as a credential for logging in the user.</strong></p></span>
+                                            <span style="color: #004500; font-size: 12px;"><p><strong>*Credential for user logging in.</strong></p></span>
                                             <p class="form-control"><?=$student['password'];?></p>
                                             </div>
 

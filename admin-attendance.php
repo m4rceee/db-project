@@ -18,11 +18,14 @@
 <body>
     <div class="header">
         <div class= "container-fluid p-3" id="header">
-            <div class="d-flex align-items-center mb-3">
-                <img src="logo.svg" alt="Logo" width="85">
-                <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
-              </div>
+          <div class="d-flex align-items-center mb-3">
+            <a href="admin-teacher.php">
+              <img src="logo.svg" alt="Logo" width="85">
+            </a>
+            <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
+          </div>
         </div>
+
         <div class="container-fluid mt-3 mb-3">
             <div class="card">
                 <div class="adminheader card-header">
@@ -63,57 +66,58 @@
           </div>
         </div>
         <div class="card-body">
-          <table id="attendance-table" class="table table-hover table-striped">
-            <thead class="table-success">
+        <table id="attendance-table" class="table table-hover table-striped">
+          <thead class="table-success">
               <tr>
-                <th>Student ID</th>
-                <th>Name</th>
-                <th>Year & Section</th>
-                <th>Course</th>
-                <th>Subject</th>
-                <th>Date</th>
-                <th>Status</th>
+                  <th>Student ID</th>
+                  <th>Name</th>
+                  <th>Year & Section</th>
+                  <th>Course</th>
+                  <th>Subject</th>
+                  <th>Date</th>
+                  <th>Status</th>
               </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <?php
+          </thead>
+          <tbody>
+              <?php
+              include("db_conn.php");
+              $query = "SELECT * FROM attendance ORDER BY date DESC";
+              $query_run = mysqli_query($conn, $query);
 
-                  //$teacher_id = mysqli_real_escape_string($conn, $_GET['EMP']);
-                  include("db_conn.php");
-                  $query = "SELECT * FROM attendance ORDER BY date DESC";
-                  $query_run = mysqli_query($conn, $query);
-
-                  if(mysqli_num_rows($query_run) > 0) {
-                    foreach($query_run as $student) {
+              if (mysqli_num_rows($query_run) > 0) {
+                  foreach ($query_run as $student) {
                       ?>
-                        <tr id="attendance-row-<?= $student['attendance_id'] ?>" data-attendance-id="<?= $student['attendance_id'] ?>">
-                            <td><?= $student['student_number']; ?></td>
-                            <td><?= $student['full_name']; ?></td>
-                            <td><?= $student['year']; ?></td>
-                            <td><?= $student['course']; ?></td>
-                            <td><?= $student['subj_code']; ?></td>
-                            <td><?= $student['date']; ?></td>
-                            <td class="status-cloumn">
+                      <tr id="attendance-row-<?= $student['attendance_id'] ?>" data-attendance-id="<?= $student['attendance_id'] ?>">
+                          <td><?= $student['student_number']; ?></td>
+                          <td><?= $student['full_name']; ?></td>
+                          <td><?= $student['year']; ?></td>
+                          <td><?= $student['course']; ?></td>
+                          <td><?= $student['subj_code']; ?></td>
+                          <td><?= $student['date']; ?></td>
+                          <td class="status-column">
                               <?php if ($student['status'] === 'present') { ?>
-                                <img src="present.svg" alt="Present">
+                                  <img src="present.svg" alt="Present">
                               <?php } elseif ($student['status'] === 'absent') { ?>
-                                <img src="absent.svg" alt="Absent">
+                                  <img src="absent.svg" alt="Absent">
                               <?php } else { ?>
-                                <span class="status-icon"></span>
+                                  <span class="status-icon"></span>
                                   <img src="no-attendance.svg" alt="Status">
                               <?php } ?>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                } else {
-                    echo "No student record found.";
-                }
-                ?>
-              </tr>
-            </tbody>
-          </table>
+                          </td>
+                      </tr>
+                      <?php
+                  }
+              } else {
+                  ?>
+                  <tr>
+                      <td colspan="7" style="text-align: center;">No student attendance record found.</td>
+                  </tr>
+                  <?php
+              }
+              ?>
+          </tbody>
+      </table>
+
         </div>
       </div>
                 </div>

@@ -24,7 +24,7 @@ $both_err = $notfound_err = $username_err = $password_err="";
                     header("Location: admin-teacher.php");
                     exit();
                 } else {
-                    $notfound_err = "<div class='alert alert-danger mt-2'><strong>Incorrect username or password.</strong></div>";
+                    $notfound_err = "<div class='alert alert-danger mt-2' style=\"font-family: 'Poppins', sans-serif;\"><strong>Incorrect username or password.</strong></div>";
                 }
             }
         } else if(empty($_POST['username']) && !empty($_POST['pswd'])) {
