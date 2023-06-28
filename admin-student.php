@@ -196,7 +196,7 @@ if (isset($_SESSION['status1'])) {
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
     </style>
     
-    <title>Admin-Student</title>
+    <title>Admin Student</title>
 </head>
 
 <body>
@@ -347,7 +347,7 @@ if (isset($_SESSION['status1'])) {
                                       <a href="student-edit.php?student_number=<?= $student['student_number']; ?>" class="btn btn-sm">
                                       <img src="user-edit.svg">
                                       </a>
-                                      <form action="student-delete.php" method="POST" class="d-inline">
+                                      <form action="student-delete.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this student?');">
                                           <button type="submit" name="delete_student" value="<?= $student['student_number']; ?>" class="btn btn-sm">
                                             <img src="user-remove.svg">
                                           </button>

@@ -143,7 +143,7 @@ if(isset($_POST['success'])) {
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
     </style>
     
-    <title>Student Forgot Password Page 2</title>
+    <title>Reset Password</title>
 </head>
 
 <body>

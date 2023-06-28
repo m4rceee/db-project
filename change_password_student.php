@@ -97,7 +97,7 @@ $status2 = $status1 = $status = $emptyFields =  $incorrectPass = $status3 = $not
           @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
       </style>
       
-      <title>Teacher Edit</title>
+      <title>Change Password</title>
   </head>
 
   <body>

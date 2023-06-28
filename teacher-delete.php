@@ -13,9 +13,9 @@ if (isset($_SESSION['status'])) {
     $status = "";
 }
 
-if (!$conn) {
+/*if (!$conn) {
     die("Connection Failed: " . mysqli_connect_error());
-}
+}*/
 
 if (isset($_POST['delete_teacher'])) {
     $teacher_id = mysqli_real_escape_string($conn, $_POST['delete_teacher']);

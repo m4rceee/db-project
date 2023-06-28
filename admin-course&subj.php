@@ -219,7 +219,7 @@ if(isset($_POST['save_course_subj'])) {
                                     <a href="subject-edit.php?subj_id=<?= $courses_subj['subj_id']; ?>" class="btn btn-sm">
                                     <img src="user-edit.svg">
                                     </a>
-                                    <form action="subject-delete.php" method="POST" class="d-inline">
+                                    <form action="subject-delete.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this subject and/or course?');">
                                         <button type="submit" name="delete_course_subj" value="<?= $courses_subj['subj_id']; ?>" class="btn btn-sm">
                                           <img src="user-remove.svg">
                                         </button>

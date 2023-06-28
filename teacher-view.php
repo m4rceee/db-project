@@ -55,7 +55,7 @@ include("db_conn.php")
           @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
       </style>
       
-      <title>Teacher-Edit</title>
+      <title>Teacher View</title>
   </head>
 
   <body>

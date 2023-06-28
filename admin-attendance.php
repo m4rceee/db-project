@@ -12,7 +12,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
     </style>
     
-    <title>Admin-Attendance</title>
+    <title>Admin Attendance</title>
 </head>
 
 <body>

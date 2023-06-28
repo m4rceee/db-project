@@ -156,7 +156,7 @@ if(isset($_POST['passRenew'])) {
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
     </style>
     
-    <title>Teacher Forgot Password Page 1</title>
+    <title>Forgot Password</title>
 </head>
 
 <body>

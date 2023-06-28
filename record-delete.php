@@ -15,13 +15,13 @@ if (isset($_POST['delete_record'])) {
     $deleteResult = mysqli_query($conn, $deleteQuery);
 
     if ($deleteResult) {
-        $_SESSION['status2'] = "Student deleted successfully.";
+        $_SESSION['status2'] = "Record deleted successfully.";
         $query = "ALTER TABLE attendance AUTO_INCREMENT = 1";
         $query_run = mysqli_query($conn, $query);
         header("Location: teacher.php?EMP=$teacherId");
         exit();
     } else {
-        $_SESSION['status2'] = "Student delete unsuccessful.";
+        $_SESSION['status2'] = "Record delete unsuccessful.";
         header("Location: teacher.php?EMP=$teacherId");
         exit();
     }

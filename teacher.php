@@ -282,7 +282,7 @@ if(isset($_POST['submit_student'])) {
                                 <a href="attendance-edit.php?attendance_id=<?= $student['attendance_id']; ?>&teacher_id=<?= $student['teacher_id']; ?>" class="btn btn-sm">
                                     <img src="user-edit.svg">
                                 </a>
-                                <form action="record-delete.php" method="POST" class="d-inline">
+                                <form action="record-delete.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this attendance record?');">
                                 <input type="hidden" name="teacherId" value="<?= $student['teacher_id']; ?>">
                                     <button type="submit" name="delete_record" value="<?= $student['attendance_id']; ?>" class="btn btn-sm delete-row-btn">
                                         <img src="user-remove.svg">

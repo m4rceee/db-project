@@ -55,7 +55,7 @@ $notfound_err = $status = "";
           @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
       </style>
       
-      <title>Teacher Edit</title>
+      <title>Subject Edit</title>
   </head>
 
   <body>
