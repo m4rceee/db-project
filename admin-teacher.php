@@ -130,11 +130,11 @@ if (isset($_SESSION['status2'])) {
 
                 $mail->isHTML(true);
 
-                $mail->Subject = 'Registration Details';
+                $mail->Subject = 'Student Attendance Registration Details';
                 $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
 
                 $mail->Body = "Dear <em>$fullname</em>, <br>";
-                $mail->Body .= "<br>We have successfully registered you. Here are your registration details: <br>";
+                $mail->Body .= "<br>We have successfully registered you as a <strong>teacher</strong>. Here are your registration details: <br>";
                 $mail->Body .= "<br>";
                 $mail->Body .= "<strong>Full Name:</strong> $fullname <br>";
                 $mail->Body .= "<strong>Gender:</strong> $gender <br>";

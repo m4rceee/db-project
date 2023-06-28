@@ -1,4 +1,11 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'phpmailer/src/Exception.php';
+require 'phpmailer/src/PHPMailer.php';
+require 'phpmailer/src/SMTP.php';
+
 include("db_conn.php");
 
 session_start();
@@ -55,26 +62,58 @@ $status2 = $status1 = $status = $emptyFields =  $incorrectPass = $status3 = $not
             exit();*/
 
         } else {
-            $query = "SELECT password from students WHERE student_number = '$studentNumber'";
+            $query = "SELECT email, password from students WHERE student_number = '$studentNumber'";
             $result = mysqli_query($conn, $query);
             $row = mysqli_fetch_assoc($result);
             
-            if (!password_verify($currentPassword, $row['password'])) {
-                $incorrectPass = "<div class='alert alert-danger mt-2'><strong>Current password is incorrect.</strong></div>";
-            }
-            
+            if ($currentPassword === $row['password']) {
+
                 // Update the password in the database
                 $update_query = "UPDATE students SET password = '$newPassword' WHERE student_number = '$studentNumber'";
                 if (mysqli_query($conn, $update_query)) {
                     session_start();
                     $_SESSION['status3'] = "Password Updated Successfully!";
                     header("Location: student.php?student_number=$studentNumber");
+
+                    $mail = new PHPMailer(true);
+                    $mail->isSMTP();
+                    $mail->Host =  'smtp.gmail.com';
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'marcelinoryan.paul@gmail.com';
+                    $mail->Password = 'dfkoqclatjaxczbp';
+                    $mail->SMTPSecure = 'ssl';
+                    $mail->Port = 465;
+    
+                    $mail->setFrom('marcelinoryan.paul@gmail.com');
+                    
+                    $email = $row['email'];
+                    $mail->addAddress($email);
+    
+                    $mail->isHTML(true);
+    
+                    $mail->Subject = 'Password Update';
+                    $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
+
+                    $mail->Body .= "<br>You have successfully updated your password. <br>";
+                    $mail->Body .= "<br>";
+                    $mail->Body .= "Your New Password: <strong>$newPassword</strong>";
+
+                    $mail->send();
+
                     exit();
                 } else {
                     $_SESSION['status3'] = "Password Update Unuccessfully!";
                     header("Location: student.php?student_number=$studentNumber");
                     exit();
                 }
+                
+            } else {
+
+                $incorrectPass = "<div class='alert alert-danger mt-2'><strong>Current password is incorrect.</strong></div>";
+            
+            }
+            
+                
         }
 
             

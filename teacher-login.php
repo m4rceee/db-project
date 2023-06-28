@@ -53,14 +53,18 @@ $updateSuccess = $both_err = $notfound_err = $email_err = $password_err="";
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-        #forgotPass {
-            color:#004500;
-            transition-duration: 0.4s;
+
+        .forgot-password-link {
+        text-decoration: none;
+        color: #004500;
+        margin-left: 3px;
+        transition: color 0.3s ease;
         }
 
-        #forgotPass:hover {
-            color:#018100;
+        .forgot-password-link:hover {
+            color: #00FF00;
         }
+
     </style>
     
     <title>Teacher Log In Page</title>
@@ -104,7 +108,7 @@ $updateSuccess = $both_err = $notfound_err = $email_err = $password_err="";
                       <?php echo $password_err; ?>
                         <?php echo $both_err; ?>
                         <div class="mt-2">
-                        <a href="teacher-forgot-password1.php" style="color: #004500; margin-left: 3px;" id="forgotPass">Forgot Password?</a>
+                        <a href="teacher-forgot-password1.php" class="forgot-password-link" id="forgotPass">Forgot Password?</a>
                     </div>
                     </div>
                     <div class="d-flex justify-content-center">

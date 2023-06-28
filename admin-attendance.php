@@ -69,6 +69,7 @@
         <table id="attendance-table" class="table table-hover table-striped">
           <thead class="table-success">
               <tr>
+                <th>Teacher ID</th>
                   <th>Student ID</th>
                   <th>Name</th>
                   <th>Year & Section</th>
@@ -88,7 +89,8 @@
                   foreach ($query_run as $student) {
                       ?>
                       <tr id="attendance-row-<?= $student['attendance_id'] ?>" data-attendance-id="<?= $student['attendance_id'] ?>">
-                          <td><?= $student['student_number']; ?></td>
+                        <td><?= $student['teacher_id']; ?></td>
+                        <td><?= $student['student_number']; ?></td>
                           <td><?= $student['full_name']; ?></td>
                           <td><?= $student['year']; ?></td>
                           <td><?= $student['course']; ?></td>
