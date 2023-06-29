@@ -12,6 +12,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+        .tagline {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 25px;
+        }
     </style>
     
     <title>Home Page</title>
@@ -21,7 +27,8 @@
     <div class="header bg-transparent">
         <div class="container-fluid p-3 white text-center">
             <img src="logo.svg" alt="logo" width="175">
-            <h1 class="title text-center text-uppercase text-white">Student Attendance Management System</h1>
+            <h1 class="title text-center text-uppercase text-white mt-2">Student Attendance Management System</h1>
+            <p class="tagline">Empowering Education with an Efficient Attendance System</p>
         </div>
     </div>
 

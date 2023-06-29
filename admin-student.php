@@ -203,7 +203,7 @@ if (isset($_SESSION['status1'])) {
     <div class="header">
         <div class="headercontainer container-fluid p-3">
           <div class="d-flex align-items-center mb-3">
-            <a href="admin-teacher.php">
+            <a href="admin-home.php">
               <img src="logo.svg" alt="Logo" width="85">
             </a>
             <h1 class="title" style="font-size: 37px; margin-bottom: 0px;">STUDENT ATTENDANCE MANAGEMENT SYSTEM</h1>
@@ -222,6 +222,9 @@ if (isset($_SESSION['status1'])) {
             </div>
             <div class="card-body">
             <ul class="nav nav-tabs">
+            <li class="nav-item">
+                    <a class="nav-link" href="admin-home.php" id="nav-item0">Dashboard</a>
+                </li>
             <li class="nav-item">
                 <a class="nav-link" href="admin-teacher.php" id="nav-item1">Teacher</a>
             </li>

@@ -13,6 +13,38 @@ session_start();
 
  "";
 
+ function isStrongPassword($password) {
+    // Check if the password meets the desired criteria for strength
+    // For example, you can set your own rules such as minimum length, required character types (uppercase, lowercase, digits, symbols), etc.
+    $minimumLength = 8;
+    $requiresUppercase = true;
+    $requiresLowercase = true;
+    $requiresDigit = true;
+    $requiresSymbol = true; // Set this to true if symbols are required
+
+    if (strlen($password) < $minimumLength) {
+        return false;
+    }
+
+    if ($requiresUppercase && !preg_match('/[A-Z]/', $password)) {
+        return false;
+    }
+
+    if ($requiresLowercase && !preg_match('/[a-z]/', $password)) {
+        return false;
+    }
+
+    if ($requiresDigit && !preg_match('/\d/', $password)) {
+        return false;
+    }
+
+    if ($requiresSymbol && !preg_match('/[^A-Za-z0-9]/', $password)) {
+        return false;
+    }
+
+    return true;
+}
+
 if (isset($_SESSION['status'])) {
     $status = "<div class='alert alert-warning alert-dismissible fade show mt-2'><strong>{$_SESSION['status']}</strong></div>";
     unset($_SESSION['status']);
@@ -33,7 +65,7 @@ if (isset($_SESSION['status3'])) {
     unset($_SESSION['status3']);
 } 
 
-$status2 = $status1 = $status = $emptyFields =  $incorrectPass = $status3 = $notMatch = "";
+$invalidPass = $status2 = $status1 = $status = $emptyFields =  $incorrectPass = $status3 = $notMatch = "";
 
     //UPDATE RECORD
     if(isset($_POST['update_teacher_password'])) {
@@ -69,44 +101,51 @@ $status2 = $status1 = $status = $emptyFields =  $incorrectPass = $status3 = $not
             
             if ($currentPassword === $row['password']) {
 
-                // Update the password in the database
-                $update_query = "UPDATE teachers SET password = '$newPassword' WHERE EMP = '$teacher_id'";
-                if (mysqli_query($conn, $update_query)) {
-                    session_start();
-                    $_SESSION['status3'] = "Password Updated Successfully!";
-                    header("Location: teacher.php?EMP=$teacher_id");
-
-                    $mail = new PHPMailer(true);
-                    $mail->isSMTP();
-                    $mail->Host =  'smtp.gmail.com';
-                    $mail->SMTPAuth = true;
-                    $mail->Username = 'marcelinoryan.paul@gmail.com';
-                    $mail->Password = 'dfkoqclatjaxczbp';
-                    $mail->SMTPSecure = 'ssl';
-                    $mail->Port = 465;
-    
-                    $mail->setFrom('marcelinoryan.paul@gmail.com');
-                    
-                    $email = $row['email'];
-                    $mail->addAddress($email);
-    
-                    $mail->isHTML(true);
-    
-                    $mail->Subject = 'Password Update';
-                    $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
-
-                    $mail->Body .= "<br>You have successfully updated your password. <br>";
-                    $mail->Body .= "<br>";
-                    $mail->Body .= "Your New Password: <strong>$newPassword</strong>";
-
-                    $mail->send();
-
-                    exit();
-                    
+                if (!isStrongPassword($newPassword)) {
+                    $invalidPass = "<div class='alert alert-danger mt-2'><strong>Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.</strong></div>";
+                    // You can customize the message to inform the user about the specific password requirements.
+                    // For example: "Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit."
+                    // You can also style the alert message as per your design.
                 } else {
-                    $_SESSION['status3'] = "Password Update Unsuccessfull.";
-                    header("Location: teacher.php?EMP=$teacher_id");
-                    exit();
+                    // Update the password in the database
+                    $update_query = "UPDATE teachers SET password = '$newPassword' WHERE EMP = '$teacher_id'";
+                    if (mysqli_query($conn, $update_query)) {
+                        session_start();
+                        $_SESSION['status3'] = "Password Updated Successfully!";
+                        header("Location: teacher.php?EMP=$teacher_id");
+
+                        $mail = new PHPMailer(true);
+                        $mail->isSMTP();
+                        $mail->Host =  'smtp.gmail.com';
+                        $mail->SMTPAuth = true;
+                        $mail->Username = 'marcelinoryan.paul@gmail.com';
+                        $mail->Password = 'dfkoqclatjaxczbp';
+                        $mail->SMTPSecure = 'ssl';
+                        $mail->Port = 465;
+        
+                        $mail->setFrom('marcelinoryan.paul@gmail.com');
+                        
+                        $email = $row['email'];
+                        $mail->addAddress($email);
+        
+                        $mail->isHTML(true);
+        
+                        $mail->Subject = 'Password Update';
+                        $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
+
+                        $mail->Body .= "<br>You have successfully updated your password. <br>";
+                        $mail->Body .= "<br>";
+                        $mail->Body .= "Your New Password: <strong>$newPassword</strong>";
+
+                        $mail->send();
+
+                        exit();
+                        
+                    } else {
+                        $_SESSION['status3'] = "Password Update Unsuccessfull.";
+                        header("Location: teacher.php?EMP=$teacher_id");
+                        exit();
+                    }
                 }
                 
             } else {
@@ -159,6 +198,7 @@ $status2 = $status1 = $status = $emptyFields =  $incorrectPass = $status3 = $not
                     <div class="card-title">
                             <h1>CHANGE PASSWORD:</h1>
                             <?php echo $emptyFields; ?>
+                            <?php echo $invalidPass; ?>
                     </div>
                     <?php
                         if(isset($_GET['EMP'])) {

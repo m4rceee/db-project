@@ -21,7 +21,7 @@ $both_err = $notfound_err = $username_err = $password_err="";
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if ($result->num_rows > 0) {
-                    header("Location: admin-teacher.php");
+                    header("Location: admin-home.php");
                     exit();
                 } else {
                     $notfound_err = "<div class='alert alert-danger mt-2' style=\"font-family: 'Poppins', sans-serif;\"><strong>Incorrect username or password.</strong></div>";
