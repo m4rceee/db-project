@@ -19,6 +19,12 @@ $courseCountResult = mysqli_query($conn, $courseCountQuery);
 $courseCountRow = mysqli_fetch_assoc($courseCountResult);
 $courseCount = $courseCountRow['count'];
 
+// Query to fetch attendance count
+$attendanceCountQuery = "SELECT COUNT(*) AS count FROM attendance WHERE status IN ('present', 'absent') ";
+$attendanceCountResult = mysqli_query($conn, $attendanceCountQuery);
+$attendanceCountRow = mysqli_fetch_assoc($attendanceCountResult);
+$attendanceCount = $attendanceCountRow['count'];
+
 ?>
 
 <!DOCTYPE html>
@@ -92,7 +98,7 @@ $courseCount = $courseCountRow['count'];
 
                 <div class="row mt-3">
 
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     <div class="info-box teacher">
                       <span>
                         <img src="teacher.svg" class="img">
@@ -103,7 +109,7 @@ $courseCount = $courseCountRow['count'];
                     </div>
                   </div>
 
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     <div class="info-box student">
                       <span">
                         <img src="student.svg" class="img">
@@ -114,13 +120,24 @@ $courseCount = $courseCountRow['count'];
                     </div>
                   </div>
 
-                  <div class="col-md-4">
+                  <div class="col-md-3">
                     <div class="info-box course">
                       <span>
                         <img src="subject.svg" class="img">
                       </span>
-                      <h2 class="label">Course & Subject</h2>
-                      <p class="label1"><strong style="font-size: 20px;"><?php echo $courseCount; ?></strong> registered courses & subjects</p>
+                      <h2 class="label">Subject</h2>
+                      <p class="label1"><strong style="font-size: 20px;"><?php echo $courseCount; ?></strong> registered subjects</p>
+                      
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="info-box course">
+                      <span>
+                        <img src="attendance.svg" class="img">
+                      </span>
+                      <h2 class="label">Attendance</h2>
+                      <p class="label1"><strong style="font-size: 20px;"><?php echo $attendanceCount; ?></strong> recorded attendances</p>
                       
                     </div>
                   </div>
@@ -133,8 +150,78 @@ $courseCount = $courseCountRow['count'];
                     <div class="text-white mb-3" id="clock" style="font-weight: bold; font-size: 50px; background-color: #004500; border-radius: 5px;"></div>
                   </div>
 
-                  <div class="col-md-12">
+                  <div class="col-md-7">
                     <div id="calendar"></div>
+                  </div>
+
+                  <div class="col-md-5">
+                  <div class="card">
+          <div class="attendanceRecord card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <h1 class="mb-0">N-Y-R</h1>
+              <div class="d-flex align-items-center">
+                <input type="text" id="search-input" class="form-control me-2" placeholder="Search" style="width: 150px;">
+                <button class="btn btn-sm text-white mt-2 mb-2 me-0" id="search-button" style="background-color: #018100;">
+                  <img src="search.svg">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+        <table id="attendance-table" class="table table-hover table-striped">
+          <thead class="table-success">
+              <tr>
+                <th>Teacher ID</th>
+                  <th>Name</th>
+                  <th>Subject</th>
+                  <th>Date</th>
+                  <th>Status</th>
+              </tr>
+          </thead>
+          <tbody>
+              <?php
+              include("db_conn.php");
+              $query = "SELECT * FROM attendance WHERE status = 'not yet recorded' ORDER BY date DESC";
+              $query_run = mysqli_query($conn, $query);
+
+              if (mysqli_num_rows($query_run) > 0) {
+                  foreach ($query_run as $student) {
+                      ?>
+                      <tr id="attendance-row-<?= $student['attendance_id'] ?>" data-attendance-id="<?= $student['attendance_id'] ?>">
+                        <td><?= $student['teacher_id']; ?></td>
+                          <td><?= $student['full_name']; ?></td>
+                          <td><?= $student['subj_code']; ?></td>
+                          <td><?= $student['date']; ?></td>
+                          <td class="status-column">
+                              <?php if ($student['status'] === 'present') { ?>
+                                  <img src="present.svg" alt="Present">
+                              <?php } elseif ($student['status'] === 'absent') { ?>
+                                  <img src="absent.svg" alt="Absent">
+                              <?php } else { ?>
+                                  <span class="status-icon"></span>
+                                  <img src="no-attendance.svg" alt="Status">
+                              <?php } ?>
+                          </td>
+                      </tr>
+                      <?php
+                  }
+              } else {
+                  ?>
+                  <tr>
+                      <td colspan="8" style="text-align: center;">No student attendance record found.</td>
+                  </tr>
+                  <?php
+              }
+              ?>
+          </tbody>
+      </table>
+
+        </div>
+      </div>
+                </div>
+            </div>
+        </div>
                   </div>
 
                 </div>
@@ -166,9 +253,12 @@ $courseCount = $courseCountRow['count'];
             },
             defaultView: 'month',
             events: [
-              // Define your events source here
-              // Example: { title: 'Event 1', start: '2023-06-01' },
-              // Make sure to provide the events data in the correct format
+              {
+                title: 'Defense Day',
+                start: '2023-06-30',
+                color: '#018100',
+                backgroundColor: '#018100',
+              },
             ]
           });
 
@@ -201,6 +291,35 @@ $courseCount = $courseCountRow['count'];
           startTime();
         });
         
+        function fetchSearchResults() {
+        // Get the search input value
+        var searchInput = document.getElementById("search-input").value;
+
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Prepare the request
+        xhr.open("GET", "search_attendance_admin1.php?search=" + encodeURIComponent(searchInput), true);
+
+        // Send the request
+        xhr.send();
+
+        // Handle the response from the server
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Response received, update the table with search results
+            var table = document.getElementById("attendance-table");
+            table.innerHTML = xhr.responseText;
+        }
+        };
+    }
+
+    // Add event listener to the search button
+    var searchButton = document.getElementById("search-button");
+    searchButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        fetchSearchResults();
+    });
       </script>
     </body>
 </html>

@@ -10,7 +10,39 @@ include("db_conn.php");
 
 session_start();
 
-$updateSuccess = $notMatch = $emptyFields = $status = $status1 = $status2 = "";
+function isStrongPassword($password) {
+    // Check if the password meets the desired criteria for strength
+    // For example, you can set your own rules such as minimum length, required character types (uppercase, lowercase, digits, symbols), etc.
+    $minimumLength = 8;
+    $requiresUppercase = true;
+    $requiresLowercase = true;
+    $requiresDigit = true;
+    $requiresSymbol = true; // Set this to true if symbols are required
+
+    if (strlen($password) < $minimumLength) {
+        return false;
+    }
+
+    if ($requiresUppercase && !preg_match('/[A-Z]/', $password)) {
+        return false;
+    }
+
+    if ($requiresLowercase && !preg_match('/[a-z]/', $password)) {
+        return false;
+    }
+
+    if ($requiresDigit && !preg_match('/\d/', $password)) {
+        return false;
+    }
+
+    if ($requiresSymbol && !preg_match('/[^A-Za-z0-9]/', $password)) {
+        return false;
+    }
+
+    return true;
+}
+
+$invalidPass = $updateSuccess = $notMatch = $emptyFields = $status = $status1 = $status2 = "";
 
 $dynamicButton = "<div class='d-flex justify-content-center'>
                 <button type='submit' id='admnsbmt' name='renewPass' class='btn btn-primary'>Reset Password</button>
@@ -68,51 +100,61 @@ if(isset($_POST['renewPass'])) {
             exit();
 
         } else {
-            
-            $query = "UPDATE teachers SET password = '$newPassword' WHERE email = '$email'";
-            if (mysqli_query($conn, $query)) {
-                
-                session_start();
-                $_SESSION['status1'] = "Password Reset Successful! Check your email for your new password.";
 
-                $mail = new PHPMailer(true);
-
-                $mail->isSMTP();
-                $mail->Host =  'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'marcelinoryan.paul@gmail.com';
-                $mail->Password = 'dfkoqclatjaxczbp';
-                $mail->SMTPSecure = 'ssl';
-                $mail->Port = 465;
-
-                $mail->setFrom('marcelinoryan.paul@gmail.com');
-
-                $mail->addAddress($email);
-
-                $mail->isHTML(true);
-
-                $mail->Subject = 'Password Reset';
-                $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
-
-                $mail->Body = "Password Reset Successful! <br>";
-                $mail->Body .= "<br>";
-                $mail->Body .= "Your new password is: <strong>$newPassword</strong>";
-
-                $mail->send();
-
-                $query = "UPDATE teachers SET otp = NULL WHERE email = '$email'";
-                $query_run = mysqli_query($conn, $query);
-
-                header("Location: teacher-forgot-password2.php");
-                exit();
-
+            if (!isStrongPassword($newPassword)) {
+                $invalidPass = "<div class='alert alert-danger mt-2'><strong>Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.</strong></div>";
+                // You can customize the message to inform the user about the specific password requirements.
+                // For example: "Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit."
+                // You can also style the alert message as per your design.
             } else {
 
-                $_SESSION['status2'] = "Password Update Unuccessfully!";
-                header("Location: teacher-forgot-password2.ph");
-                exit();
+                $query = "UPDATE teachers SET password = '$newPassword' WHERE email = '$email'";
+                if (mysqli_query($conn, $query)) {
+                    
+                    session_start();
+                    $_SESSION['status1'] = "Password Reset Successful! Check your email for your new password.";
+
+                    $mail = new PHPMailer(true);
+
+                    $mail->isSMTP();
+                    $mail->Host =  'smtp.gmail.com';
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'marcelinoryan.paul@gmail.com';
+                    $mail->Password = 'dfkoqclatjaxczbp';
+                    $mail->SMTPSecure = 'ssl';
+                    $mail->Port = 465;
+
+                    $mail->setFrom('marcelinoryan.paul@gmail.com');
+
+                    $mail->addAddress($email);
+
+                    $mail->isHTML(true);
+
+                    $mail->Subject = 'Password Reset';
+                    $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
+
+                    $mail->Body = "Password Reset Successful! <br>";
+                    $mail->Body .= "<br>";
+                    $mail->Body .= "Your new password is: <strong>$newPassword</strong>";
+
+                    $mail->send();
+
+                    $query = "UPDATE teachers SET otp = NULL WHERE email = '$email'";
+                    $query_run = mysqli_query($conn, $query);
+
+                    header("Location: teacher-forgot-password2.php");
+                    exit();
+
+                } else {
+
+                    $_SESSION['status2'] = "Password Update Unuccessfully!";
+                    header("Location: teacher-forgot-password2.ph");
+                    exit();
+
+                }
 
             }
+            
 
         }
 
@@ -173,6 +215,7 @@ if(isset($_POST['success'])) {
                         <?php echo $emptyFields; ?>
                         <?php echo $status1; ?>
                         <?php echo $status2; ?>
+                        <?php echo $invalidPass; ?>
                     </div>
 
                     <div class="mb-3">

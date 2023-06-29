@@ -10,7 +10,39 @@ include("db_conn.php");
 
 session_start();
 
-$updateSuccess = $notMatch = $emptyFields = $status = $status1 = $status2 = "";
+function isStrongPassword($password) {
+    // Check if the password meets the desired criteria for strength
+    // For example, you can set your own rules such as minimum length, required character types (uppercase, lowercase, digits, symbols), etc.
+    $minimumLength = 8;
+    $requiresUppercase = true;
+    $requiresLowercase = true;
+    $requiresDigit = true;
+    $requiresSymbol = true; // Set this to true if symbols are required
+
+    if (strlen($password) < $minimumLength) {
+        return false;
+    }
+
+    if ($requiresUppercase && !preg_match('/[A-Z]/', $password)) {
+        return false;
+    }
+
+    if ($requiresLowercase && !preg_match('/[a-z]/', $password)) {
+        return false;
+    }
+
+    if ($requiresDigit && !preg_match('/\d/', $password)) {
+        return false;
+    }
+
+    if ($requiresSymbol && !preg_match('/[^A-Za-z0-9]/', $password)) {
+        return false;
+    }
+
+    return true;
+}
+
+$invalidPass = $updateSuccess = $notMatch = $emptyFields = $status = $status1 = $status2 = "";
 
 $dynamicButton = "<div class='d-flex justify-content-center'>
                 <button type='submit' id='admnsbmt' name='renewPass' class='btn btn-primary'>Reset Password</button>
@@ -68,8 +100,15 @@ if(isset($_POST['renewPass'])) {
             exit();
 
         } else {
-            
-            $query = "UPDATE students SET password = '$newPassword' WHERE email = '$email'";
+
+            if (!isStrongPassword($newPassword)) {
+                $invalidPass = "<div class='alert alert-danger mt-2'><strong>Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.</strong></div>";
+                // You can customize the message to inform the user about the specific password requirements.
+                // For example: "Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit."
+                // You can also style the alert message as per your design.
+            } else {
+
+                $query = "UPDATE students SET password = '$newPassword' WHERE email = '$email'";
             if (mysqli_query($conn, $query)) {
                 
                 session_start();
@@ -111,6 +150,8 @@ if(isset($_POST['renewPass'])) {
                 $_SESSION['status2'] = "Password Update Unuccessfully!";
                 header("Location: student-forgot-password2.ph");
                 exit();
+
+            }
 
             }
 
@@ -165,6 +206,7 @@ if(isset($_POST['success'])) {
                         <?php echo $emptyFields; ?>
                         <?php echo $status1; ?>
                         <?php echo $status2; ?>
+                        <?php echo $invalidPass; ?>
                     </div>
 
                     <div class="mb-3">

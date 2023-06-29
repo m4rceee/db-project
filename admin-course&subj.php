@@ -210,7 +210,7 @@ if(isset($_POST['save_course_subj'])) {
                         </thead>
                         <tbody>
                           <?php
-                          $query = "SELECT * FROM subjects";
+                          $query = "SELECT * FROM subjects ORDER BY course";
                           $query_run = mysqli_query($conn, $query);
 
                           if(mysqli_num_rows($query_run) > 0) {
