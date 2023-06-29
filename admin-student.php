@@ -161,7 +161,7 @@ if (isset($_SESSION['status1'])) {
                   $mail->Body .= "<strong>Course:</strong> $course <br>";
                   $mail->Body .= "<strong>Contact:</strong> $contact <br>";
                   $mail->Body .= "<strong>Email:</strong> $email <br>";
-                  $mail->Body .= "<strong>* Password:</strong> $password <br>";
+                  $mail->Body .= "<strong>* Password:</strong> $password <em>We recommend you to change it to your desired password once you are logged in for the first time.</em><br>";
                   $mail->Body .= "<br>* <em>Required for logging in</em> <br>";
                   $mail->Body .= "<br>";
                   $mail->Body .= "It would be appreciated if you kept this information confidential.<br>";
