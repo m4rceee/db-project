@@ -26,7 +26,7 @@ if (isset($_SESSION['status1'])) {
     unset($_SESSION['status1']);
     $dynamicButton1 = "";
     $dynamicButton2 = "<div class='d-flex justify-content-center mt-3'>
-    <button type='submit' id='otpsbmt' name='passRenew' class='btn w-100 text-white' style='height: auto;
+    <button type='submit' id='otpsbmt' name='passRenew' class='btn w-100 text-white my-button' style='height: auto;
     margin-top: 15px;
     margin-bottom: 15px;
     font-size: 20px;
@@ -86,7 +86,7 @@ if(isset($_POST['sendOtp'])) {
 
                 $mail->isHTML(true);
 
-                $mail->Subject = 'OTP for Password Renewal';
+                $mail->Subject = 'OTP Request for Password Renewal';
                 $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
 
                 $mail->Body = "Your OTP is: <strong>$otp</strong>";
@@ -154,6 +154,13 @@ if(isset($_POST['passRenew'])) {
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+        .my-button {
+            transition-duration: 0.4s;
+        }
+        .my-button:hover {
+            background-color: #004500;
+        }
     </style>
     
     <title>Forgot Password</title>

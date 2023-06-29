@@ -112,7 +112,7 @@
               } else {
                   ?>
                   <tr>
-                      <td colspan="7" style="text-align: center;">No student attendance record found.</td>
+                      <td colspan="8" style="text-align: center;">No student attendance record found.</td>
                   </tr>
                   <?php
               }

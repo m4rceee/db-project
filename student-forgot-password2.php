@@ -95,8 +95,8 @@ if(isset($_POST['renewPass'])) {
                 $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
 
                 $mail->Body = "Password Reset Successful! <br>";
-                $mail->Body = "<br>";
-                $mail->Body = "Your new password is: <strong>$newPassword</strong>";
+                $mail->Body .= "<br>";
+                $mail->Body .= "Your new password is: <strong>$newPassword</strong>";
 
                 $mail->send();
 

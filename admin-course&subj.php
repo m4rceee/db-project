@@ -194,6 +194,7 @@ if(isset($_POST['save_course_subj'])) {
                               </button>
                             </div>
                       </div>
+                    </div>
                     <table id="subject-table" class="table table-borderless table-striped table-hover">
                         <thead class="table-success">
                           <tr>
@@ -231,7 +232,11 @@ if(isset($_POST['save_course_subj'])) {
                               <?php
                             }
                           } else {
-                            echo "No records found.";
+                            ?>
+                            <tr>
+                                <td colspan="8" style="text-align: center;">No records found.</td>
+                            </tr>
+                            <?php
                           }
                           ?>
                         </tbody>

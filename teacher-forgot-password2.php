@@ -25,7 +25,7 @@ if (isset($_SESSION['status1'])) {
     $status1 = "<div class='alert alert-success alert-dismissible fade show mt-2' style=\"font-family: 'Poppins', sans-serif;\"><strong>{$_SESSION['status1']}</strong></div>";
     unset($_SESSION['status1']);
     $dynamicButton = "<div class='d-flex justify-content-center mt-3'>
-    <button type='submit' id='admnsbmt' name='success' class='btn w-100 text-white' style='height: auto;
+    <button type='submit' id='admnsbmt' name='success' class='btn w-100 text-white my-button' style='height: auto;
     margin-top: 15px;
     margin-bottom: 15px;
     font-size: 20px;
@@ -95,8 +95,8 @@ if(isset($_POST['renewPass'])) {
                 $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
 
                 $mail->Body = "Password Reset Successful! <br>";
-                $mail->Body = "<br>";
-                $mail->Body = "Your new password is: <strong>$newPassword</strong>";
+                $mail->Body .= "<br>";
+                $mail->Body .= "Your new password is: <strong>$newPassword</strong>";
 
                 $mail->send();
 
@@ -141,6 +141,14 @@ if(isset($_POST['success'])) {
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+        .my-button {
+            transition-duration: 0.4s;
+        }
+        .my-button:hover {
+            background-color: #004500;
+        }
+
     </style>
     
     <title>Reset Password</title>

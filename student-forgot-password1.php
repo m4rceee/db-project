@@ -86,7 +86,7 @@ if(isset($_POST['sendOtp'])) {
 
                 $mail->isHTML(true);
 
-                $mail->Subject = 'OTP for Password Renewal';
+                $mail->Subject = 'OTP Request for Password Renewal';
                 $mail->AddCustomHeader('List-Unsubscribe: <mailto:marcelinoryan.paul@gmail.com>');
 
                 $mail->Body = "Your OTP is: <strong>$otp</strong>";

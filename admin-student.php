@@ -360,7 +360,11 @@ if (isset($_SESSION['status1'])) {
                                 <?php
                               }
                             } else {
-                              echo "No records found.";
+                              ?>
+                              <tr>
+                                  <td colspan="5" style="text-align: center;">No students found.</td>
+                              </tr>
+                              <?php
                             }
                           ?>
                         </tbody>

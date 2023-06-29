@@ -324,7 +324,11 @@ if (isset($_SESSION['status2'])) {
                                   <?php
                                 }
                               } else {
-                                echo "No records found.";
+                                ?>
+                                <tr>
+                                    <td colspan="4" style="text-align: center;">No teachers found.</td>
+                                </tr>
+                                <?php
                               }
                             ?>
                           </tbody>
